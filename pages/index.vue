@@ -29,9 +29,6 @@
                   :title="item.title"
                   :value="item.title"
                 >
-                  <v-list-item-title v-if="!rail">{{
-                    item.title
-                  }}</v-list-item-title>
                 </v-list-item>
               </template>
 
@@ -129,8 +126,8 @@
               ></v-data-table>
               <div class="d-flex justify-end pt-2">
                 <v-pagination
-                  v-model="latePage"
-                  :length="latePageCount"
+                  v-model="page"
+                  :length="10"
                   :total-visible="5"
                 ></v-pagination>
               </div>
