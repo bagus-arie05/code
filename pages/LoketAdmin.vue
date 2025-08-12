@@ -113,7 +113,7 @@
               </v-card>
             </v-col>
           </v-row>
-          </v-card>
+        
 
           <!-- Next Patient Card -->
           <v-col cols="12" md="4">
@@ -299,7 +299,7 @@ const items = ref([
   },
   { title: "Loket Admin", icon: "mdi-account-supervisor" },
   { title: "Ranap Admin", icon: "mdi-bed" },
-  { title: "Klinik Admin", icon: "mdi-hospital-box" },
+  { title: "Klinik Admin", icon: "mdi-hospital-box", to : "/KlinikAdmin" },
   { title: "Klinik Ruang Admin", icon: "mdi-hospital-marker" },
   { title: "Anjungan", icon: "mdi-account-box-multiple", to: "/anjungan" },
   { title: "Fast Track", icon: "mdi-clock-fast" },
