@@ -20,6 +20,7 @@
               open-on-hover
               location="end"
               :nudge-right="3"
+              
             >
               <template v-slot:activator="{ props }">
                 <v-list-item
@@ -50,15 +51,26 @@
               </v-list>
             </v-menu>
 
-            <v-list-item
-              v-else
-              :prepend-icon="item.icon"
-              :title="item.title"
-              :to="item.to"
-              :value="item.title"
-              :class="{ 'v-list-item--active': item.title === currentPage }"
-              link
-            ></v-list-item>
+         <v-tooltip
+            v-else
+            :disabled="!rail"
+            open-on-hover
+            location="end"
+            :text="item.title"
+            color="blue"
+          >
+            <template v-slot:activator="{ props }">
+              <v-list-item
+                v-bind="props"
+                :prepend-icon="item.icon"
+                :title="item.title"
+                :to="item.to"
+                :value="item.title"
+                :class="{ 'v-list-item--active': item.title === currentPage }"
+                link
+              ></v-list-item>
+            </template>
+          </v-tooltip>
           </template>
         </v-list>
       </v-navigation-drawer>    
@@ -68,22 +80,54 @@
       <v-container>
         <div class="d-flex align-center justify-space-between mb-4">
           <h1 class="text-h4">Klinik Admin</h1>
-          <v-chip color="green" variant="elevated">
+          <v-tooltip text="Jumlah Maksimal Bangku Tersedia">
+            <template v-slot:activator="{ props }">
+          <v-chip v-bind="props" color="green" variant="elevated">
             <v-icon left>mdi-circle-small</v-icon>
             Max Quota Bangku 0
           </v-chip>
+            </template>
+          </v-tooltip>
         </div>
 
         <!-- Loket Admin Table -->
         <v-card class="mb-5 pa-4">
           <v-card-title class="d-flex justify-space-between align-center">
             Loket Admin
+             <!-- <div class="d-flex align-center">
+              <span text-h1>Show</span>
+              <v-select
+                density="compact"
+                variant="outlined"
+                :items="[10, 25, 50, 100]"
+                class="mx-1"
+                style="width: 90px"
+              ></v-select>
+              <span>entries</span>
+            </div>   --> 
+            <!-- not aligned with the class div "need seperated div class" -->
             <div>
-              <v-btn color="green" class="mr-2">1</v-btn>
-              <v-btn color="blue" class="mr-2">5</v-btn>
-              <v-btn color="orange" class="mr-2">10</v-btn>
-              <v-btn color="red">20</v-btn>
-            </div>
+                <v-tooltip text="Panggil 1 Antrian">
+                  <template v-slot:activator="{ props }">
+                    <v-btn v-bind="props" color="green" class="mr-2">1</v-btn>
+                  </template>
+                </v-tooltip>
+                <v-tooltip text="Panggil 5 Antrian">
+                  <template v-slot:activator="{ props }">
+                    <v-btn v-bind="props" color="blue" class="mr-2">5</v-btn>
+                  </template>
+                </v-tooltip>
+                <v-tooltip text="Panggil 10 Antrian">
+                  <template v-slot:activator="{ props }">
+                    <v-btn v-bind="props" color="orange" class="mr-2">10</v-btn>
+                  </template>
+                </v-tooltip>
+                <v-tooltip text="Panggil 20 Antrian">
+                  <template v-slot:activator="{ props }">
+                    <v-btn v-bind="props" color="red">20</v-btn>
+                  </template>
+                </v-tooltip>
+            </div>  
           </v-card-title>
           <v-table class="mt-3">
             <thead>
@@ -146,19 +190,20 @@
 import { ref, computed } from "vue";
 
 // Reactive data
-const drawer = ref(true);
-const rail = ref(false);
+const drawer = ref(true); // Nilai awal true agar sidebar terlihat
+const rail = ref(true); // Nilai awal true agar sidebar dimulai dalam mode rail
 const search = ref("");
 const lateSearch = ref("");
 const clinicSearch = ref("");
 const itemsPerPage = ref(10);
 const lateItemsPerPage = ref(10);
 const clinicItemsPerPage = ref(10);
-const currentPage = ref("Loket Admin");
+const currentPage = ref("Klinik Admin");
 
 // Navigation items
 const items = ref([
   { title: "Dashboard", icon: "mdi-view-dashboard", to: "/dashboard" },
+
   {
     title: "Setting",
     icon: "mdi-cog",
@@ -171,11 +216,19 @@ const items = ref([
       { title: "Screen", to: "/setting/screen" },
     ],
   },
-  { title: "Loket Admin", icon: "mdi-account-supervisor" },
+  { title: "Loket Admin", icon: "mdi-account-supervisor", to : "/LoketAdmin" },
   { title: "Ranap Admin", icon: "mdi-bed" },
   { title: "Klinik Admin", icon: "mdi-hospital-box", to : "/KlinikAdmin" },
-  { title: "Klinik Ruang Admin", icon: "mdi-hospital-marker" },
-  { title: "Anjungan", icon: "mdi-account-box-multiple", to: "/anjungan" },
+  { title: "Klinik Ruang Admin", icon: "mdi-hospital-marker", to: "/KlinikRuangAdmin" },
+
+  { 
+    title: "Anjungan", 
+    icon: "mdi-account-box-multiple", 
+    children: [
+      {title: "Anjungan", to: "/Anjungan/Anjungan"},
+      {title: "Admin Anjungan", to: "/Anjungan/AdminAnjungan"}
+    ],
+  },
   { title: "Fast Track", icon: "mdi-clock-fast" },
   { title: "Data Pasien", icon: "mdi-account-multiple" },
   { title: "Screen", icon: "mdi-monitor" },

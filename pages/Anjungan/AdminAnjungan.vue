@@ -210,7 +210,6 @@ const currentPage = ref("Admin Anjungan");
 // Struktur data yang memisahkan menu dengan dan tanpa submenu
 const items = ref([
   { title: "Dashboard", icon: "mdi-view-dashboard", to: "/dashboard" },
-
   {
     title: "Setting",
     icon: "mdi-cog",
@@ -227,15 +226,7 @@ const items = ref([
   { title: "Ranap Admin", icon: "mdi-bed" },
   { title: "Klinik Admin", icon: "mdi-hospital-box", to : "/KlinikAdmin" },
   { title: "Klinik Ruang Admin", icon: "mdi-hospital-marker", to: "/KlinikRuangAdmin" },
-
-  { 
-    title: "Anjungan", 
-    icon: "mdi-account-box-multiple", 
-    children: [
-      {title: "Anjungan", to: "/Anjungan/Anjungan"},
-      {title: "Admin Anjungan", to: "/Anjungan/AdminAnjungan"}
-    ],
-  },
+  { title: "Anjungan", icon: "mdi-account-box-multiple", to: "/anjungan" },
   { title: "Fast Track", icon: "mdi-clock-fast" },
   { title: "Data Pasien", icon: "mdi-account-multiple" },
   { title: "Screen", icon: "mdi-monitor" },

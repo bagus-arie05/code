@@ -272,8 +272,8 @@
 import { ref, computed } from "vue";
 
 // Reactive data
-const drawer = ref(true);
-const rail = ref(false);
+const drawer = ref(true); // Nilai awal true agar sidebar terlihat
+const rail = ref(true); // Nilai awal true agar sidebar dimulai dalam mode rail
 const search = ref("");
 const lateSearch = ref("");
 const clinicSearch = ref("");
@@ -285,6 +285,7 @@ const currentPage = ref("Loket Admin");
 // Navigation items
 const items = ref([
   { title: "Dashboard", icon: "mdi-view-dashboard", to: "/dashboard" },
+
   {
     title: "Setting",
     icon: "mdi-cog",
@@ -297,11 +298,19 @@ const items = ref([
       { title: "Screen", to: "/setting/screen" },
     ],
   },
-  { title: "Loket Admin", icon: "mdi-account-supervisor" },
+  { title: "Loket Admin", icon: "mdi-account-supervisor", to : "/LoketAdmin" },
   { title: "Ranap Admin", icon: "mdi-bed" },
   { title: "Klinik Admin", icon: "mdi-hospital-box", to : "/KlinikAdmin" },
-  { title: "Klinik Ruang Admin", icon: "mdi-hospital-marker" },
-  { title: "Anjungan", icon: "mdi-account-box-multiple", to: "/anjungan" },
+  { title: "Klinik Ruang Admin", icon: "mdi-hospital-marker", to: "/KlinikRuangAdmin" },
+
+  { 
+    title: "Anjungan", 
+    icon: "mdi-account-box-multiple", 
+    children: [
+      {title: "Anjungan", to: "/Anjungan/Anjungan"},
+      {title: "Admin Anjungan", to: "/Anjungan/AdminAnjungan"}
+    ],
+  },
   { title: "Fast Track", icon: "mdi-clock-fast" },
   { title: "Data Pasien", icon: "mdi-account-multiple" },
   { title: "Screen", icon: "mdi-monitor" },
