@@ -1,312 +1,494 @@
 <template>
   <v-app>
-    <v-layout>
-      <!-- App Bar Header -->
-      <v-app-bar app color="green darken-1" dark>
-        <v-app-bar-nav-icon @click="rail = !rail"></v-app-bar-nav-icon>
-        <v-toolbar-title class="ml-2">Antrean RSSA</v-toolbar-title>
-        <v-spacer></v-spacer>
-        <v-btn icon>
-          <v-icon>mdi-account-circle</v-icon>
-        </v-btn>
-        <span class="mr-2">Rajal Bayu Nogroho</span>
-      </v-app-bar>
+    <v-app-bar>
+      <v-container fluid class="pa-4">
+        <v-row align="center" no-gutters class="fill-height">
+          <v-col cols="auto">
+            <div class="d-flex align-center">
+              <!-- Total 2 with dark background -->
+              <div
+                class="bg-grey-darken-4 px-3 py-1 mr-2"
+                style="border-radius: 3px"
+              >
+                <span class="text-body-1 font-weight-bold text-white"
+                  >Total 2</span
+                >
+              </div>
+              <!-- Max 150 Pasien with lighter background -->
+              <div
+                class="bg-grey-darken-2 px-3 py-1"
+                style="border-radius: 3px"
+              >
+                <span class="text-body-1 text-white">Max 150 Pasien</span>
+              </div>
+            </div>
+          </v-col>
+          <v-spacer></v-spacer>
+          <v-col cols="auto">
+            <div class="d-flex align-center text-body-2">
+              <v-icon size="small" class="mr-2">mdi-view-dashboard</v-icon>
+              <span class="mr-6">Dashboard</span>
+              <span>Loket 12 | Rabu, 13 Agustus 2025 - Pelayanan</span>
+            </div>
+          </v-col>
+        </v-row>
+      </v-container>
+    </v-app-bar>
 
-      <!-- Navigation Drawer -->
-      <v-navigation-drawer v-model="drawer" :rail="rail" permanent app>
-        <v-list density="compact" nav>
-          <template v-for="item in items" :key="item.title">
-            <v-menu
-              v-if="item.children"
-              open-on-hover
-              location="end"
-              :nudge-right="8"
+    <!-- Cyan Divider -->
+    <div class="bg-cyan" style="height: 3px"></div>
+
+    <!-- Main Content -->
+    <v-main>
+      <v-container fluid class="pa-6">
+        <!-- Date and Service Info -->
+        <v-row class="mb-6">
+          <v-col>
+            <div class="text-h6 text-grey-darken-2 font-weight-medium">
+              Loket 12 | Rabu, 13 Agustus 2025 - Pelayanan :
+            </div>
+          </v-col>
+          <v-spacer></v-spacer>
+          <!-- Queue Number Buttons on the right -->
+          <v-col cols="auto">
+            <div class="d-flex align-center">
+              <v-btn
+                color="success"
+                dark
+                size="large"
+                class="mr-4 px-8"
+                style="min-width: 120px; height: 40px"
+              >
+                <span class="text-h6 font-weight-bold">1</span>
+              </v-btn>
+              <v-btn
+                color="info"
+                dark
+                size="large"
+                class="mr-4 px-4"
+                style="min-width: 120px; height: 40px"
+              >
+                <span class="text-h6 font-weight-bold">5</span>
+              </v-btn>
+              <v-btn
+                color="warning"
+                dark
+                size="large"
+                class="mr-4 px-4"
+                style="min-width: 120px; height: 40px"
+              >
+                <span class="text-h6 font-weight-bold">10</span>
+              </v-btn>
+              <v-btn
+                color="error"
+                dark
+                size="large"
+                class="px-4"
+                style="min-width: 120px; height: 40px"
+              >
+                <span class="text-h6 font-weight-bold">20</span>
+              </v-btn>
+            </div>
+          </v-col>
+        </v-row>
+
+        <!-- Next Patient Card -->
+        <v-row justify="center" class="pa-12">
+          <v-col cols="12" md="10" lg="8">
+            <v-card
+              color="success"
+              dark
+              flat
+              class="text-center"
+              style="min-height: 160px; border-radius: 8px"
             >
-              <template v-slot:activator="{ props }">
-                <v-list-item
-                  v-bind="props"
-                  :prepend-icon="item.icon"
-                  :title="item.title"
-                  :value="item.title"
-                  :class="{ 'v-list-item--active': item.title === currentPage }"
+              <v-card-text class="pa-8">
+                <div
+                  class="text-h2 font-weight-bold mb-2"
+                  style="letter-spacing: 4px"
                 >
-                </v-list-item>
-              </template>
-
-              <v-list>
-                <v-list-item>
-                  <v-list-item-title class="font-weight-bold">{{
-                    item.title
-                  }}</v-list-item-title>
-                </v-list-item>
-                <v-divider></v-divider>
-                <v-list-item
-                  v-for="child in item.children"
-                  :key="child.title"
-                  :to="child.to"
-                  link
+                  NEXT
+                </div>
+                <div class="text-h6 mb-4 font-weight-normal">
+                  Pasien - UM1004
+                </div>
+                <div
+                  class="text-body-1 font-weight-normal"
+                  style="opacity: 0.9"
                 >
-                  <v-list-item-title>{{ child.title }}</v-list-item-title>
-                </v-list-item>
-              </v-list>
-            </v-menu>
-
-            <v-list-item
-              v-else
-              :prepend-icon="item.icon"
-              :title="item.title"
-              :to="item.to"
-              :value="item.title"
-              :class="{ 'v-list-item--active': item.title === currentPage }"
-              link
-            ></v-list-item>
-          </template>
-        </v-list>
-      </v-navigation-drawer>
-
-      <!-- Main Content -->
-      <v-main>
-        <v-container fluid class="pa-4">
-          <!-- Header Stats -->
-          <div class="d-flex justify-space-between align-center mb-4">
-            <div class="d-flex align-center">
-              <span class="text-h6 mr-4">Total 0</span>
-              <span class="text-body-2">Max 150 Pasien</span>
-            </div>
-            <div class="d-flex align-center">
-              <span class="mr-4">Dashboard</span>
-              <span class="mr-4">Loket 24 | Senin, 11 Agustus 2025</span>
-              <span class="mr-4">11 Agustus 2025 - Pelayanan</span>
-            </div>
-          </div>
-
-          <!-- Status Cards -->
-          <v-card class="pa-5 mb-5" color="white" flat></v-card>
-          <v-row align="center">
-            <v-col cols="1
-            2" md="1">
-              <v-card color="green" dark class="text-center">
-                <v-card-text>
-                  <div class="text-h4">1</div>
-                </v-card-text>
-              </v-card>
-            </v-col>
-            <v-col cols="12" md="1">
-              <v-card color="blue" dark class="text-center">
-                <v-card-text>
-                  <div class="text-h4">1</div>
-                </v-card-text>
-              </v-card>
-            </v-col>
-            <v-col cols="12" md="1">
-              <v-card color="orange" dark class="text-center">
-                <v-card-text>
-                  <div class="text-h4">4</div>
-                </v-card-text>
-              </v-card>
-            </v-col>
-            <v-col cols="12" md="1">
-              <v-card color="red" dark class="text-center">
-                <v-card-text>
-                  <div class="text-h4">30</div>
-                </v-card-text>
-              </v-card>
-            </v-col>
-          </v-row>
-          </v-card>
-
-          <!-- Next Patient Card -->
-          <v-col cols="12" md="4">
-            <v-card color="green" dark class="mb-4">
-              <v-card-text class="text-center">
-                <div class="text-h4 mb-2">NEXT</div>
-                <div class="text-h6 mb-1">Pasien : UM1001</div>
-                <div class="text-body-2">
                   Klik untuk memanggil pasien selanjutnya
                 </div>
               </v-card-text>
             </v-card>
           </v-col>
+        </v-row>
 
-          <!-- Main Data Table -->
-          <v-card class="mb-4">
-            <v-card-title class="d-flex justify-space-between align-center">
-              <span>Data Pasien</span>
-              <div class="d-flex align-center">
-                <span class="mr-2">Show</span>
-                <v-select
-                  v-model="itemsPerPage"
-                  :items="[10, 25, 50, 100]"
-                  density="compact"
-                  variant="outlined"
-                  style="max-width: 80px"
-                  class="mr-4"
-                ></v-select>
-                <span class="mr-2">entries</span>
-                <span class="mr-4">Search:</span>
-                <v-text-field
-                  v-model="search"
-                  density="compact"
-                  variant="outlined"
-                  style="max-width: 200px"
-                  hide-details
-                ></v-text-field>
-              </div>
-            </v-card-title>
-            <v-data-table
-              :headers="mainHeaders"
-              :items="mainPatients"
-              :search="search"
-              :items-per-page="itemsPerPage"
-              class="elevation-1"
-            >
-              <template v-slot:item.aksi="{ item }">
-                <div class="d-flex ga-1">
-                  <v-btn size="small" color="success" variant="flat"
-                    >Panggil</v-btn
-                  >
-                  <v-btn size="small" color="info" variant="flat">Cancel</v-btn>
-                  <v-btn size="small" color="primary" variant="flat"
-                    >Selesai</v-btn
-                  >
-                </div>
-              </template>
-              <template v-slot:item.jamPanggil="{ item }">
-                <span :class="getRowClass(item)">{{ item.jamPanggil }}</span>
-              </template>
-            </v-data-table>
-          </v-card>
+        <!-- Main Data Table -->
+        <v-card class="mb-4">
+          <v-card-title class="text-subtitle-1 font-weight-bold">
+            DATA PASIEN
+          </v-card-title>
 
-          <!-- Total Quota Used -->
-          <v-card color="cyan" dark class="mb-4">
-            <v-card-text class="text-center">
-              <div class="text-h6">Total Quota Terpakai 5</div>
-            </v-card-text>
-          </v-card>
+          <div class="d-flex justify-space-between align-center pa-4">
+            <div class="d-flex align-center">
+              <span>Show</span>
+              <v-select
+                v-model="itemsPerPage"
+                :items="[10, 25, 50]"
+                label="Entries"
+                density="compact"
+                hide-details
+                class="mx-2"
+                style="width: 80px"
+              ></v-select>
+              <span>entries</span>
+            </div>
 
-          <!-- Late Patients Table -->
-          <v-card class="mb-4">
-            <v-card-title class="d-flex justify-space-between align-center">
-              <span>Info Pasien Lapor Terlambat</span>
-              <div class="d-flex align-center">
-                <span class="mr-2 text-caption text-orange"
-                  >KETERANGAN: PASIEN MASUK PADA TANGGAL</span
+            <div class="d-flex align-center">
+              <span class="mr-2">Search:</span>
+              <v-text-field
+                v-model="search"
+                label="Search"
+                hide-details
+                density="compact"
+                style="min-width: 200px"
+              ></v-text-field>
+            </div>
+          </div>
+
+          <v-data-table
+            :headers="mainHeaders"
+            :items="paginatedMainPatients"
+            :search="search"
+            hide-default-footer
+            class="elevation-1"
+          >
+            <template v-slot:item.aksi="{ item }">
+              <div class="d-flex ga-1">
+                <v-btn size="small" color="success" variant="flat"
+                  >Panggil</v-btn
                 >
-                <span class="mr-2">Show</span>
-                <v-select
-                  v-model="lateItemsPerPage"
-                  :items="[10, 25, 50, 100]"
-                  density="compact"
-                  variant="outlined"
-                  style="max-width: 80px"
-                  class="mr-4"
-                ></v-select>
-                <span class="mr-2">entries</span>
-                <span class="mr-4">Search:</span>
-                <v-text-field
-                  v-model="lateSearch"
-                  density="compact"
-                  variant="outlined"
-                  style="max-width: 200px"
-                  hide-details
-                ></v-text-field>
+                <v-btn size="small" color="info" variant="flat">Cancel</v-btn>
+                <v-btn size="small" color="primary" variant="flat"
+                  >Selesai</v-btn
+                >
               </div>
-            </v-card-title>
-            <v-data-table
-              :headers="lateHeaders"
-              :items="latePatients"
-              :search="lateSearch"
-              :items-per-page="lateItemsPerPage"
-              class="elevation-1"
-            >
-              <template v-slot:no-data>
-                <div class="text-center pa-4">No data available in table</div>
-              </template>
-            </v-data-table>
-          </v-card>
+            </template>
+            <template v-slot:item.jamPanggil="{ item }">
+              <span :class="getRowClass(item)">{{ item.jamPanggil }}</span>
+            </template>
+          </v-data-table>
 
-          <!-- Clinic Entry Patients Table -->
-          <v-card>
-            <v-card-title class="d-flex justify-space-between align-center">
-              <span>Info Pasien Masuk Klinik</span>
+          <!-- Custom Pagination for Main Table -->
+          <v-row align="center" class="pa-4">
+            <v-col cols="auto">
+              <span class="text-body-2 text-grey-darken-1">
+                Showing {{ getStartEntry(mainCurrentPage, itemsPerPage) }} to
+                {{
+                  getEndEntry(
+                    mainCurrentPage,
+                    itemsPerPage,
+                    filteredMainPatients.length
+                  )
+                }}
+                of {{ filteredMainPatients.length }} entries
+              </span>
+            </v-col>
+            <v-spacer></v-spacer>
+            <v-col cols="auto">
               <div class="d-flex align-center">
-                <span class="mr-2">Show</span>
-                <v-select
-                  v-model="clinicItemsPerPage"
-                  :items="[10, 25, 50, 100]"
-                  density="compact"
-                  variant="outlined"
-                  style="max-width: 80px"
-                  class="mr-4"
-                ></v-select>
-                <span class="mr-2">entries</span>
-                <span class="mr-4">Search:</span>
-                <v-text-field
-                  v-model="clinicSearch"
-                  density="compact"
-                  variant="outlined"
-                  style="max-width: 200px"
-                  hide-details
-                ></v-text-field>
+                <v-btn
+                  :disabled="mainCurrentPage === 1"
+                  variant="text"
+                  size="small"
+                  class="text-grey-darken-1 mr-2"
+                  @click="goToMainPage(mainCurrentPage - 1)"
+                >
+                  Previous
+                </v-btn>
+
+                <v-btn
+                  v-for="page in getVisiblePages(
+                    mainCurrentPage,
+                    getMainTotalPages
+                  )"
+                  :key="page"
+                  :variant="page === mainCurrentPage ? 'flat' : 'text'"
+                  :color="
+                    page === mainCurrentPage ? 'primary' : 'grey-lighten-1'
+                  "
+                  size="small"
+                  class="mx-1"
+                  min-width="35"
+                  @click="goToMainPage(page)"
+                >
+                  {{ page }}
+                </v-btn>
+
+                <v-btn
+                  :disabled="mainCurrentPage === getMainTotalPages"
+                  variant="text"
+                  size="small"
+                  class="text-grey-darken-1 ml-2"
+                  @click="goToMainPage(mainCurrentPage + 1)"
+                >
+                  Next
+                </v-btn>
               </div>
-            </v-card-title>
-            <v-data-table
-              :headers="clinicHeaders"
-              :items="clinicPatients"
-              :search="clinicSearch"
-              :items-per-page="clinicItemsPerPage"
-              class="elevation-1"
-            >
-              <template v-slot:no-data>
-                <div class="text-center pa-4">No data available in table</div>
-              </template>
-            </v-data-table>
-          </v-card>
-        </v-container>
-      </v-main>
-    </v-layout>
+            </v-col>
+          </v-row>
+        </v-card>
+
+        <!-- Total Quota Used -->
+        <v-card color="cyan" dark class="mb-4">
+          <v-card-text class="text-center">
+            <div class="text-h6">Total Quota Terpakai 5</div>
+          </v-card-text>
+        </v-card>
+
+        <!-- Late Patients Table -->
+        <v-card class="mb-4">
+          <v-card-title
+            class="text-subtitle-1 font-weight-bold bg-red-lighten-3"
+          >
+            INFO PASIEN LAPOR TERLAMBAT
+          </v-card-title>
+
+          <div class="d-flex justify-space-between align-center pa-4">
+            <div class="d-flex align-center">
+              <span>Show</span>
+              <v-select
+                v-model="lateItemsPerPage"
+                :items="[10, 25, 50]"
+                label="Entries"
+                density="compact"
+                hide-details
+                class="mx-2"
+                style="width: 80px"
+              ></v-select>
+              <span>entries</span>
+            </div>
+
+            <div class="d-flex align-center">
+              <span class="mr-2">Search:</span>
+              <v-text-field
+                v-model="lateSearch"
+                label="Search"
+                hide-details
+                density="compact"
+                style="min-width: 200px"
+              ></v-text-field>
+            </div>
+          </div>
+
+          <v-data-table
+            :headers="lateHeaders"
+            :items="paginatedLatePatients"
+            :search="lateSearch"
+            hide-default-footer
+            class="elevation-1"
+          >
+            <template v-slot:no-data>
+              <div class="text-center pa-4">No data available in table</div>
+            </template>
+          </v-data-table>
+
+          <!-- Custom Pagination for Late Patients -->
+          <v-row
+            align="center"
+            class="pa-4"
+            v-if="filteredLatePatients.length > 0"
+          >
+            <v-col cols="auto">
+              <span class="text-body-2 text-grey-darken-1">
+                Showing
+                {{ getStartEntry(lateCurrentPage, lateItemsPerPage) }} to
+                {{
+                  getEndEntry(
+                    lateCurrentPage,
+                    lateItemsPerPage,
+                    filteredLatePatients.length
+                  )
+                }}
+                of {{ filteredLatePatients.length }} entries
+              </span>
+            </v-col>
+            <v-spacer></v-spacer>
+            <v-col cols="auto">
+              <div class="d-flex align-center">
+                <v-btn
+                  :disabled="lateCurrentPage === 1"
+                  variant="text"
+                  size="small"
+                  class="text-grey-darken-1 mr-2"
+                  @click="goToLatePage(lateCurrentPage - 1)"
+                >
+                  Previous
+                </v-btn>
+
+                <v-btn
+                  v-for="page in getVisiblePages(
+                    lateCurrentPage,
+                    getLateTotalPages
+                  )"
+                  :key="page"
+                  :variant="page === lateCurrentPage ? 'flat' : 'text'"
+                  :color="
+                    page === lateCurrentPage ? 'primary' : 'grey-lighten-1'
+                  "
+                  size="small"
+                  class="mx-1"
+                  min-width="35"
+                  @click="goToLatePage(page)"
+                >
+                  {{ page }}
+                </v-btn>
+
+                <v-btn
+                  :disabled="lateCurrentPage === getLateTotalPages"
+                  variant="text"
+                  size="small"
+                  class="text-grey-darken-1 ml-2"
+                  @click="goToLatePage(lateCurrentPage + 1)"
+                >
+                  Next
+                </v-btn>
+              </div>
+            </v-col>
+          </v-row>
+        </v-card>
+
+        <!-- Clinic Entry Patients Table -->
+        <v-card class="mb-4">
+          <v-card-title
+            class="text-subtitle-1 font-weight-bold bg-red-lighten-3"
+          >
+            INFO PASIEN MASUK KLINIK
+          </v-card-title>
+
+          <div class="d-flex justify-space-between align-center pa-4">
+            <div class="d-flex align-center">
+              <span>Show</span>
+              <v-select
+                v-model="clinicItemsPerPage"
+                :items="[10, 25, 50]"
+                label="Entries"
+                density="compact"
+                hide-details
+                class="mx-2"
+                style="width: 80px"
+              ></v-select>
+              <span>entries</span>
+            </div>
+
+            <div class="d-flex align-center">
+              <span class="mr-2">Search:</span>
+              <v-text-field
+                v-model="clinicSearch"
+                label="Search"
+                hide-details
+                density="compact"
+                style="min-width: 200px"
+              ></v-text-field>
+            </div>
+          </div>
+
+          <v-data-table
+            :headers="clinicHeaders"
+            :items="paginatedClinicPatients"
+            :search="clinicSearch"
+            hide-default-footer
+            class="elevation-1"
+          >
+            <template v-slot:no-data>
+              <div class="text-center pa-4">No data available in table</div>
+            </template>
+          </v-data-table>
+
+          <!-- Custom Pagination for Clinic Patients -->
+          <v-row
+            align="center"
+            class="pa-4"
+            v-if="filteredClinicPatients.length > 0"
+          >
+            <v-col cols="auto">
+              <span class="text-body-2 text-grey-darken-1">
+                Showing
+                {{ getStartEntry(clinicCurrentPage, clinicItemsPerPage) }} to
+                {{
+                  getEndEntry(
+                    clinicCurrentPage,
+                    clinicItemsPerPage,
+                    filteredClinicPatients.length
+                  )
+                }}
+                of {{ filteredClinicPatients.length }} entries
+              </span>
+            </v-col>
+            <v-spacer></v-spacer>
+            <v-col cols="auto">
+              <div class="d-flex align-center">
+                <v-btn
+                  :disabled="clinicCurrentPage === 1"
+                  variant="text"
+                  size="small"
+                  class="text-grey-darken-1 mr-2"
+                  @click="goToClinicPage(clinicCurrentPage - 1)"
+                >
+                  Previous
+                </v-btn>
+
+                <v-btn
+                  v-for="page in getVisiblePages(
+                    clinicCurrentPage,
+                    getClinicTotalPages
+                  )"
+                  :key="page"
+                  :variant="page === clinicCurrentPage ? 'flat' : 'text'"
+                  :color="
+                    page === clinicCurrentPage ? 'primary' : 'grey-lighten-1'
+                  "
+                  size="small"
+                  class="mx-1"
+                  min-width="35"
+                  @click="goToClinicPage(page)"
+                >
+                  {{ page }}
+                </v-btn>
+
+                <v-btn
+                  :disabled="clinicCurrentPage === getClinicTotalPages"
+                  variant="text"
+                  size="small"
+                  class="text-grey-darken-1 ml-2"
+                  @click="goToClinicPage(clinicCurrentPage + 1)"
+                >
+                  Next
+                </v-btn>
+              </div>
+            </v-col>
+          </v-row>
+        </v-card>
+      </v-container>
+    </v-main>
   </v-app>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, computed } from "vue";
 
 // Reactive data
-const drawer = ref(true);
-const rail = ref(false);
 const search = ref("");
 const lateSearch = ref("");
 const clinicSearch = ref("");
 const itemsPerPage = ref(10);
 const lateItemsPerPage = ref(10);
 const clinicItemsPerPage = ref(10);
-const currentPage = ref("Loket Admin");
 
-// Navigation items
-const items = ref([
-  { title: "Dashboard", icon: "mdi-view-dashboard", to: "/dashboard" },
-  {
-    title: "Setting",
-    icon: "mdi-cog",
-    children: [
-      { title: "Hak Akses", to: "/setting/hak-akses" },
-      { title: "User Login", to: "/setting/user-login" },
-      { title: "Master Loket", to: "/setting/master-loket" },
-      { title: "Master Klinik", to: "/setting/master-klinik" },
-      { title: "Master Klinik Ruang", to: "/setting/master-klinik-ruang" },
-      { title: "Screen", to: "/setting/screen" },
-    ],
-  },
-  { title: "Loket Admin", icon: "mdi-account-supervisor" },
-  { title: "Ranap Admin", icon: "mdi-bed" },
-  { title: "Klinik Admin", icon: "mdi-hospital-box" },
-  { title: "Klinik Ruang Admin", icon: "mdi-hospital-marker" },
-  { title: "Anjungan", icon: "mdi-account-box-multiple", to: "/anjungan" },
-  { title: "Fast Track", icon: "mdi-clock-fast" },
-  { title: "Data Pasien", icon: "mdi-account-multiple" },
-  { title: "Screen", icon: "mdi-monitor" },
-  { title: "List Pasien", icon: "mdi-format-list-bulleted" },
-]);
+// Pagination current pages
+const mainCurrentPage = ref(1);
+const lateCurrentPage = ref(1);
+const clinicCurrentPage = ref(1);
 
 // Table headers
 const mainHeaders = ref([
@@ -333,17 +515,17 @@ const lateHeaders = ref([
 
 const clinicHeaders = ref([
   { title: "#", value: "no", sortable: false },
-  { title: "Barcode", value: "barcode" },
-  { title: "No Antrian", value: "noAntrian" },
-  { title: "No RM", value: "noRM" },
-  { title: "Shift", value: "shift" },
-  { title: "Klinik", value: "klinik" },
-  { title: "Fast Track", value: "fastTrack" },
-  { title: "Pembayaran", value: "pembayaran" },
+  { title: "Barcode", value: "barcode", sortable: true },
+  { title: "No Antrian", value: "noAntrian", sortable: true },
+  { title: "No RM", value: "noRM", sortable: true },
+  { title: "Shift", value: "shift", sortable: true },
+  { title: "Klinik", value: "klinik", sortable: true },
+  { title: "Fast Track", value: "fastTrack", sortable: true },
+  { title: "Pembayaran", value: "pembayaran", sortable: true },
   { title: "Aksi", value: "aksi", sortable: false },
 ]);
 
-// Sample data
+// Sample data - Extended for pagination demo
 const mainPatients = ref([
   {
     no: 1,
@@ -369,47 +551,84 @@ const mainPatients = ref([
     panggil: "Cancel",
     status: "normal",
   },
-  {
-    no: 3,
-    jamPanggil: "07:35",
-    barcode: "250811100355",
-    noAntrian: "UM1005 | Online - 250811100355",
+  // Add more sample data for pagination demo
+  ...Array.from({ length: 20 }, (_, i) => ({
+    no: i + 3,
+    jamPanggil: `${String(Math.floor(Math.random() * 12) + 1).padStart(2, "0")}:${String(Math.floor(Math.random() * 60)).padStart(2, "0")}`,
+    barcode: `25081110${String(i + 200).padStart(4, "0")}`,
+    noAntrian: `UM100${i + 3} | Online - 25081110${String(i + 200).padStart(4, "0")}`,
     shift: "Shift 1",
-    klinik: "THT",
+    klinik: ["KANDUNGAN", "IPD", "THT", "SARAF"][Math.floor(Math.random() * 4)],
     fastTrack: "UMUM",
     pembayaran: "UMUM",
     panggil: "Panggil",
     status: "normal",
-  },
-  {
-    no: 4,
-    jamPanggil: "08:05",
-    barcode: "250811100355",
-    noAntrian: "UM1006 | Online - 250811100355",
-    shift: "Shift 1",
-    klinik: "THT",
-    fastTrack: "UMUM",
-    pembayaran: "UMUM",
-    panggil: "Panggil",
-    status: "normal",
-  },
-  {
-    no: 5,
-    jamPanggil: "12:43",
-    barcode: "250811100402",
-    noAntrian: "UM1004 | Online - 250811100402",
-    shift: "Shift 1",
-    klinik: "SARAF",
-    fastTrack: "UMUM",
-    pembayaran: "UMUM",
-    panggil: "Panggil",
-    status: "normal",
-  },
+  })),
 ]);
 
 const latePatients = ref([]);
-
 const clinicPatients = ref([]);
+
+// Computed properties for filtering
+const filteredMainPatients = computed(() => {
+  if (!search.value) return mainPatients.value;
+  return mainPatients.value.filter((item) =>
+    Object.values(item).some((val) =>
+      String(val).toLowerCase().includes(search.value.toLowerCase())
+    )
+  );
+});
+
+const filteredLatePatients = computed(() => {
+  if (!lateSearch.value) return latePatients.value;
+  return latePatients.value.filter((item) =>
+    Object.values(item).some((val) =>
+      String(val).toLowerCase().includes(lateSearch.value.toLowerCase())
+    )
+  );
+});
+
+const filteredClinicPatients = computed(() => {
+  if (!clinicSearch.value) return clinicPatients.value;
+  return clinicPatients.value.filter((item) =>
+    Object.values(item).some((val) =>
+      String(val).toLowerCase().includes(clinicSearch.value.toLowerCase())
+    )
+  );
+});
+
+// Computed properties for pagination
+const getMainTotalPages = computed(() => {
+  return Math.ceil(filteredMainPatients.value.length / itemsPerPage.value);
+});
+
+const getLateTotalPages = computed(() => {
+  return Math.ceil(filteredLatePatients.value.length / lateItemsPerPage.value);
+});
+
+const getClinicTotalPages = computed(() => {
+  return Math.ceil(
+    filteredClinicPatients.value.length / clinicItemsPerPage.value
+  );
+});
+
+const paginatedMainPatients = computed(() => {
+  const start = (mainCurrentPage.value - 1) * itemsPerPage.value;
+  const end = start + itemsPerPage.value;
+  return filteredMainPatients.value.slice(start, end);
+});
+
+const paginatedLatePatients = computed(() => {
+  const start = (lateCurrentPage.value - 1) * lateItemsPerPage.value;
+  const end = start + lateItemsPerPage.value;
+  return filteredLatePatients.value.slice(start, end);
+});
+
+const paginatedClinicPatients = computed(() => {
+  const start = (clinicCurrentPage.value - 1) * clinicItemsPerPage.value;
+  const end = start + clinicItemsPerPage.value;
+  return filteredClinicPatients.value.slice(start, end);
+});
 
 // Methods
 const getRowClass = (item) => {
@@ -417,6 +636,78 @@ const getRowClass = (item) => {
     return "text-green font-weight-bold";
   }
   return "";
+};
+
+const getStartEntry = (currentPage, itemsPerPage) => {
+  return (currentPage - 1) * itemsPerPage + 1;
+};
+
+const getEndEntry = (currentPage, itemsPerPage, totalItems) => {
+  const end = currentPage * itemsPerPage;
+  return Math.min(end, totalItems);
+};
+
+const getVisiblePages = (currentPage, totalPages) => {
+  const pages = [];
+  const total = totalPages;
+  const current = currentPage;
+
+  if (total <= 0) return pages;
+
+  // Always show first page
+  pages.push(1);
+
+  // Show pages around current page
+  const start = Math.max(2, current - 1);
+  const end = Math.min(total - 1, current + 1);
+
+  // Add ellipsis if needed
+  if (start > 2) pages.push("...");
+
+  // Add middle pages
+  for (let i = start; i <= end; i++) {
+    if (i !== 1 && i !== total) {
+      pages.push(i);
+    }
+  }
+
+  // Add ellipsis if needed
+  if (end < total - 1) pages.push("...");
+
+  // Always show last page if more than 1 page
+  if (total > 1) pages.push(total);
+
+  return pages;
+};
+
+const goToMainPage = (page) => {
+  if (
+    page >= 1 &&
+    page <= getMainTotalPages.value &&
+    typeof page === "number"
+  ) {
+    mainCurrentPage.value = page;
+  }
+};
+
+const goToLatePage = (page) => {
+  if (
+    page >= 1 &&
+    page <= getLateTotalPages.value &&
+    typeof page === "number"
+  ) {
+    lateCurrentPage.value = page;
+  }
+};
+
+const goToClinicPage = (page) => {
+  if (
+    page >= 1 &&
+    page <= getClinicTotalPages.value &&
+    typeof page === "number"
+  ) {
+    clinicCurrentPage.value = page;
+  }
 };
 </script>
 
@@ -430,18 +721,26 @@ const getRowClass = (item) => {
   color: #4caf50 !important;
 }
 
+.bg-cyan {
+  background-color: #00bcd4 !important;
+}
+
 /* Custom scrollbar */
 :deep(.v-data-table) {
   font-size: 14px;
 }
 
-:deep(.v-data-table__wrapper) {
-  max-height: 400px;
-  overflow-y: auto;
-}
-
 /* Row highlighting */
 :deep(.v-data-table tbody tr:nth-child(1)) {
   background-color: #fff3cd !important;
+}
+
+.v-btn {
+  text-transform: none !important;
+}
+
+.v-btn--size-small {
+  height: 32px;
+  padding: 0 8px;
 }
 </style>
