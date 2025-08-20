@@ -73,7 +73,7 @@
 
     <!-- Area konten utama aplikasi -->
     <v-main>
-      <v-container fluid>
+      <v-container fluid class="pa-0">
         <!-- Di sini, konten halaman akan di-render oleh Nuxt -->
         <slot></slot>
       </v-container>

@@ -1,3 +1,5 @@
+<!-- eslint-disable vue/valid-v-slot -->
+<!-- eslint-disable vue/no-unused-vars -->
 <template>
   <v-app>
     <v-app-bar>
@@ -23,7 +25,7 @@
               </div>
             </div>
           </v-col>
-          <v-spacer></v-spacer>
+          <v-spacer />
           <v-col cols="auto">
             <div class="d-flex align-center text-body-2">
               <v-icon size="small" class="mr-2">mdi-view-dashboard</v-icon>
@@ -36,7 +38,7 @@
     </v-app-bar>
 
     <!-- Cyan Divider -->
-    <div class="bg-cyan" style="height: 3px"></div>
+    <div class="bg-cyan" style="height: 3px" />
 
     <!-- Main Content -->
     <v-main>
@@ -48,7 +50,7 @@
               Loket 12 | Rabu, 13 Agustus 2025 - Pelayanan :
             </div>
           </v-col>
-          <v-spacer></v-spacer>
+          <v-spacer />
           <!-- Queue Number Buttons on the right -->
           <v-col cols="auto">
             <div class="d-flex align-center">
@@ -140,7 +142,7 @@
                 hide-details
                 class="mx-2"
                 style="width: 80px"
-              ></v-select>
+              />
               <span>entries</span>
             </div>
 
@@ -152,7 +154,7 @@
                 hide-details
                 density="compact"
                 style="min-width: 200px"
-              ></v-text-field>
+              />
             </div>
           </div>
 
@@ -163,7 +165,7 @@
             hide-default-footer
             class="elevation-1"
           >
-            <template v-slot:item.aksi="{ item }">
+            <template #item.aksi="{ item }">
               <div class="d-flex ga-1">
                 <v-btn size="small" color="success" variant="flat"
                   >Panggil</v-btn
@@ -174,7 +176,7 @@
                 >
               </div>
             </template>
-            <template v-slot:item.jamPanggil="{ item }">
+            <template #item.jamPanggil="{ item }">
               <span :class="getRowClass(item)">{{ item.jamPanggil }}</span>
             </template>
           </v-data-table>
@@ -194,7 +196,7 @@
                 of {{ filteredMainPatients.length }} entries
               </span>
             </v-col>
-            <v-spacer></v-spacer>
+            <v-spacer />
             <v-col cols="auto">
               <div class="d-flex align-center">
                 <v-btn
@@ -265,7 +267,7 @@
                 hide-details
                 class="mx-2"
                 style="width: 80px"
-              ></v-select>
+              />
               <span>entries</span>
             </div>
 
@@ -277,7 +279,7 @@
                 hide-details
                 density="compact"
                 style="min-width: 200px"
-              ></v-text-field>
+              />
             </div>
           </div>
 
@@ -288,16 +290,16 @@
             hide-default-footer
             class="elevation-1"
           >
-            <template v-slot:no-data>
+            <template #no-data>
               <div class="text-center pa-4">No data available in table</div>
             </template>
           </v-data-table>
 
           <!-- Custom Pagination for Late Patients -->
           <v-row
+            v-if="filteredLatePatients.length > 0"
             align="center"
             class="pa-4"
-            v-if="filteredLatePatients.length > 0"
           >
             <v-col cols="auto">
               <span class="text-body-2 text-grey-darken-1">
@@ -313,7 +315,7 @@
                 of {{ filteredLatePatients.length }} entries
               </span>
             </v-col>
-            <v-spacer></v-spacer>
+            <v-spacer />
             <v-col cols="auto">
               <div class="d-flex align-center">
                 <v-btn
@@ -377,7 +379,7 @@
                 hide-details
                 class="mx-2"
                 style="width: 80px"
-              ></v-select>
+              />
               <span>entries</span>
             </div>
 
@@ -389,7 +391,7 @@
                 hide-details
                 density="compact"
                 style="min-width: 200px"
-              ></v-text-field>
+              />
             </div>
           </div>
 
@@ -400,16 +402,16 @@
             hide-default-footer
             class="elevation-1"
           >
-            <template v-slot:no-data>
+            <template #no-data>
               <div class="text-center pa-4">No data available in table</div>
             </template>
           </v-data-table>
 
           <!-- Custom Pagination for Clinic Patients -->
           <v-row
+            v-if="filteredClinicPatients.length > 0"
             align="center"
             class="pa-4"
-            v-if="filteredClinicPatients.length > 0"
           >
             <v-col cols="auto">
               <span class="text-body-2 text-grey-darken-1">
@@ -425,7 +427,7 @@
                 of {{ filteredClinicPatients.length }} entries
               </span>
             </v-col>
-            <v-spacer></v-spacer>
+            <v-spacer />
             <v-col cols="auto">
               <div class="d-flex align-center">
                 <v-btn
@@ -477,39 +479,74 @@
 <script setup lang="ts">
 import { ref, computed } from "vue";
 
+// Define interfaces for type safety
+interface Patient {
+  no: number;
+  jamPanggil: string;
+  barcode: string;
+  noAntrian: string;
+  shift: string;
+  klinik: string;
+  fastTrack: string;
+  pembayaran: string;
+  panggil: string;
+  status: string;
+}
+
+interface LatePatient {
+  no: number;
+  barcode: string;
+  noAntrian: string;
+  shift: string;
+  klinik: string;
+  aksi: string;
+}
+
+interface ClinicPatient {
+  no: number;
+  barcode: string;
+  noAntrian: string;
+  noRM: string;
+  shift: string;
+  klinik: string;
+  fastTrack: string;
+  pembayaran: string;
+  aksi: string;
+}
+
 // Reactive data
-const search = ref("");
-const lateSearch = ref("");
-const clinicSearch = ref("");
-const itemsPerPage = ref(10);
-const lateItemsPerPage = ref(10);
-const clinicItemsPerPage = ref(10);
+const search = ref<string>("");
+const lateSearch = ref<string>("");
+const clinicSearch = ref<string>("");
+const itemsPerPage = ref<number>(10);
+const lateItemsPerPage = ref<number>(10);
+const clinicItemsPerPage = ref<number>(10);
 
 // Pagination current pages
-const mainCurrentPage = ref(1);
-const lateCurrentPage = ref(1);
-const clinicCurrentPage = ref(1);
+const mainCurrentPage = ref<number>(1);
+const lateCurrentPage = ref<number>(1);
+const clinicCurrentPage = ref<number>(1);
 
 // Table headers
 const mainHeaders = ref([
   { title: "No", value: "no", sortable: false },
-  { title: "Jam Panggil", value: "jamPanggil" },
-  { title: "Barcode", value: "barcode" },
-  { title: "No Antrian", value: "noAntrian" },
-  { title: "Shift", value: "shift" },
-  { title: "Klinik", value: "klinik" },
-  { title: "Fast Track", value: "fastTrack" },
-  { title: "Pembayaran", value: "pembayaran" },
-  { title: "Panggil", value: "panggil" },
+  { title: "Jam Panggil", value: "jamPanggil", sortable: true },
+  { title: "Barcode", value: "barcode", sortable: true },
+  { title: "No Antrian", value: "noAntrian", sortable: true },
+  { title: "Shift", value: "shift", sortable: true },
+  { title: "Klinik", value: "klinik", sortable: true },
+  { title: "Fast Track", value: "fastTrack", sortable: true },
+  { title: "Pembayaran", value: "pembayaran", sortable: true },
+  { title: "Panggil", value: "panggil", sortable: true },
   { title: "Aksi", value: "aksi", sortable: false },
 ]);
 
 const lateHeaders = ref([
   { title: "No", value: "no", sortable: false },
-  { title: "Barcode", value: "barcode" },
-  { title: "No Antrian", value: "noAntrian" },
-  { title: "Shift", value: "shift" },
-  { title: "Klinik", value: "klinik" },
+  { title: "Barcode", value: "barcode", sortable: true },
+  { title: "No Antrian", value: "noAntrian", sortable: true },
+  { title: "Shift", value: "shift", sortable: true},
+  { title: "Klinik", value: "klinik", sortable: true },
   { title: "Aksi", value: "aksi", sortable: false },
 ]);
 
@@ -526,7 +563,7 @@ const clinicHeaders = ref([
 ]);
 
 // Sample data - Extended for pagination demo
-const mainPatients = ref([
+const mainPatients = ref<Patient[]>([
   {
     no: 1,
     jamPanggil: "12:49",
@@ -566,8 +603,8 @@ const mainPatients = ref([
   })),
 ]);
 
-const latePatients = ref([]);
-const clinicPatients = ref([]);
+const latePatients = ref<LatePatient[]>([]);
+const clinicPatients = ref<ClinicPatient[]>([]);
 
 // Computed properties for filtering
 const filteredMainPatients = computed(() => {
@@ -631,24 +668,24 @@ const paginatedClinicPatients = computed(() => {
 });
 
 // Methods
-const getRowClass = (item) => {
+const getRowClass = (item: Patient): string => {
   if (item.status === "current") {
     return "text-green font-weight-bold";
   }
   return "";
 };
 
-const getStartEntry = (currentPage, itemsPerPage) => {
+const getStartEntry = (currentPage: number, itemsPerPage: number): number => {
   return (currentPage - 1) * itemsPerPage + 1;
 };
 
-const getEndEntry = (currentPage, itemsPerPage, totalItems) => {
+const getEndEntry = (currentPage: number, itemsPerPage: number, totalItems: number): number => {
   const end = currentPage * itemsPerPage;
   return Math.min(end, totalItems);
 };
 
-const getVisiblePages = (currentPage, totalPages) => {
-  const pages = [];
+const getVisiblePages = (currentPage: number, totalPages: number): (number | string)[] => {
+  const pages: (number | string)[] = [];
   const total = totalPages;
   const current = currentPage;
 
@@ -680,7 +717,7 @@ const getVisiblePages = (currentPage, totalPages) => {
   return pages;
 };
 
-const goToMainPage = (page) => {
+const goToMainPage = (page: number): void => {
   if (
     page >= 1 &&
     page <= getMainTotalPages.value &&
@@ -690,7 +727,7 @@ const goToMainPage = (page) => {
   }
 };
 
-const goToLatePage = (page) => {
+const goToLatePage = (page: number): void => {
   if (
     page >= 1 &&
     page <= getLateTotalPages.value &&
@@ -700,7 +737,7 @@ const goToLatePage = (page) => {
   }
 };
 
-const goToClinicPage = (page) => {
+const goToClinicPage = (page: number): void => {
   if (
     page >= 1 &&
     page <= getClinicTotalPages.value &&
