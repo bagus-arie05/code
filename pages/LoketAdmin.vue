@@ -1,321 +1,215 @@
 <template>
-  <v-app>
-    <v-layout>
-      <!-- App Bar Header -->
-      <v-app-bar app color="green darken-1" dark>
-        <v-app-bar-nav-icon @click="rail = !rail"></v-app-bar-nav-icon>
-        <v-toolbar-title class="ml-2">Antrean RSSA</v-toolbar-title>
-        <v-spacer></v-spacer>
-        <v-btn icon>
-          <v-icon>mdi-account-circle</v-icon>
-        </v-btn>
-        <span class="mr-2">Rajal Bayu Nogroho</span>
-      </v-app-bar>
+  <!-- Main Content -->
+  <v-main>
+    <v-container fluid class="pa-4 main-content-padding">
+      <!-- Header Stats -->
+      <div class="d-flex justify-space-between align-center mb-4">
+        <div class="d-flex align-center">
+          <span class="text-h6 mr-4">Total 0</span>
+          <span class="text-body-2">Max 150 Pasien</span>
+        </div>
+        <div class="d-flex align-center">
+          <span class="mr-4">Dashboard</span>
+          <span class="mr-4">Loket 24 | Senin, 11 Agustus 2025</span>
+          <span class="mr-4">11 Agustus 2025 - Pelayanan</span>
+        </div>
+      </div>
 
-      <!-- Navigation Drawer -->
-      <v-navigation-drawer v-model="drawer" :rail="rail" permanent app>
-        <v-list density="compact" nav>
-          <template v-for="item in items" :key="item.title">
-            <v-menu
-              v-if="item.children"
-              open-on-hover
-              location="end"
-              :nudge-right="8"
-            >
-              <template v-slot:activator="{ props }">
-                <v-list-item
-                  v-bind="props"
-                  :prepend-icon="item.icon"
-                  :title="item.title"
-                  :value="item.title"
-                  :class="{ 'v-list-item--active': item.title === currentPage }"
-                >
-                </v-list-item>
-              </template>
-
-              <v-list>
-                <v-list-item>
-                  <v-list-item-title class="font-weight-bold">{{
-                    item.title
-                  }}</v-list-item-title>
-                </v-list-item>
-                <v-divider></v-divider>
-                <v-list-item
-                  v-for="child in item.children"
-                  :key="child.title"
-                  :to="child.to"
-                  link
-                >
-                  <v-list-item-title>{{ child.title }}</v-list-item-title>
-                </v-list-item>
-              </v-list>
-            </v-menu>
-
-            <v-list-item
-              v-else
-              :prepend-icon="item.icon"
-              :title="item.title"
-              :to="item.to"
-              :value="item.title"
-              :class="{ 'v-list-item--active': item.title === currentPage }"
-              link
-            ></v-list-item>
-          </template>
-        </v-list>
-      </v-navigation-drawer>
-
-      <!-- Main Content -->
-      <v-main>
-        <v-container fluid class="pa-4">
-          <!-- Header Stats -->
-          <div class="d-flex justify-space-between align-center mb-4">
-            <div class="d-flex align-center">
-              <span class="text-h6 mr-4">Total 0</span>
-              <span class="text-body-2">Max 150 Pasien</span>
-            </div>
-            <div class="d-flex align-center">
-              <span class="mr-4">Dashboard</span>
-              <span class="mr-4">Loket 24 | Senin, 11 Agustus 2025</span>
-              <span class="mr-4">11 Agustus 2025 - Pelayanan</span>
-            </div>
-          </div>
-
-          <!-- Status Cards -->
-          <v-card class="pa-5 mb-5" color="white" flat></v-card>
-          <v-row align="center">
-            <v-col cols="1
-            2" md="1">
-              <v-card color="green" dark class="text-center">
-                <v-card-text>
-                  <div class="text-h4">1</div>
-                </v-card-text>
-              </v-card>
-            </v-col>
-            <v-col cols="12" md="1">
-              <v-card color="blue" dark class="text-center">
-                <v-card-text>
-                  <div class="text-h4">1</div>
-                </v-card-text>
-              </v-card>
-            </v-col>
-            <v-col cols="12" md="1">
-              <v-card color="orange" dark class="text-center">
-                <v-card-text>
-                  <div class="text-h4">4</div>
-                </v-card-text>
-              </v-card>
-            </v-col>
-            <v-col cols="12" md="1">
-              <v-card color="red" dark class="text-center">
-                <v-card-text>
-                  <div class="text-h4">30</div>
-                </v-card-text>
-              </v-card>
-            </v-col>
-          </v-row>
-        
-
-          <!-- Next Patient Card -->
-          <v-col cols="12" md="4">
-            <v-card color="green" dark class="mb-4">
-              <v-card-text class="text-center">
-                <div class="text-h4 mb-2">NEXT</div>
-                <div class="text-h6 mb-1">Pasien : UM1001</div>
-                <div class="text-body-2">
-                  Klik untuk memanggil pasien selanjutnya
-                </div>
-              </v-card-text>
-            </v-card>
-          </v-col>
-
-          <!-- Main Data Table -->
-          <v-card class="mb-4">
-            <v-card-title class="d-flex justify-space-between align-center">
-              <span>Data Pasien</span>
-              <div class="d-flex align-center">
-                <span class="mr-2">Show</span>
-                <v-select
-                  v-model="itemsPerPage"
-                  :items="[10, 25, 50, 100]"
-                  density="compact"
-                  variant="outlined"
-                  style="max-width: 80px"
-                  class="mr-4"
-                ></v-select>
-                <span class="mr-2">entries</span>
-                <span class="mr-4">Search:</span>
-                <v-text-field
-                  v-model="search"
-                  density="compact"
-                  variant="outlined"
-                  style="max-width: 200px"
-                  hide-details
-                ></v-text-field>
-              </div>
-            </v-card-title>
-            <v-data-table
-              :headers="mainHeaders"
-              :items="mainPatients"
-              :search="search"
-              :items-per-page="itemsPerPage"
-              class="elevation-1"
-            >
-              <template v-slot:item.aksi="{ item }">
-                <div class="d-flex ga-1">
-                  <v-btn size="small" color="success" variant="flat"
-                    >Panggil</v-btn
-                  >
-                  <v-btn size="small" color="info" variant="flat">Cancel</v-btn>
-                  <v-btn size="small" color="primary" variant="flat"
-                    >Selesai</v-btn
-                  >
-                </div>
-              </template>
-              <template v-slot:item.jamPanggil="{ item }">
-                <span :class="getRowClass(item)">{{ item.jamPanggil }}</span>
-              </template>
-            </v-data-table>
-          </v-card>
-
-          <!-- Total Quota Used -->
-          <v-card color="cyan" dark class="mb-4">
-            <v-card-text class="text-center">
-              <div class="text-h6">Total Quota Terpakai 5</div>
+      <!-- Status Cards -->
+      <v-card class="pa-5 mb-5" color="white" flat></v-card>
+      <v-row align="center">
+        <v-col cols="12" md="1">
+          <v-card color="green" dark class="text-center clickable-card" @click="handleStatusCardClick('1')">
+            <v-card-text>
+              <div class="text-h4">1</div>
             </v-card-text>
           </v-card>
-
-          <!-- Late Patients Table -->
-          <v-card class="mb-4">
-            <v-card-title class="d-flex justify-space-between align-center">
-              <span>Info Pasien Lapor Terlambat</span>
-              <div class="d-flex align-center">
-                <span class="mr-2 text-caption text-orange"
-                  >KETERANGAN: PASIEN MASUK PADA TANGGAL</span
-                >
-                <span class="mr-2">Show</span>
-                <v-select
-                  v-model="lateItemsPerPage"
-                  :items="[10, 25, 50, 100]"
-                  density="compact"
-                  variant="outlined"
-                  style="max-width: 80px"
-                  class="mr-4"
-                ></v-select>
-                <span class="mr-2">entries</span>
-                <span class="mr-4">Search:</span>
-                <v-text-field
-                  v-model="lateSearch"
-                  density="compact"
-                  variant="outlined"
-                  style="max-width: 200px"
-                  hide-details
-                ></v-text-field>
-              </div>
-            </v-card-title>
-            <v-data-table
-              :headers="lateHeaders"
-              :items="latePatients"
-              :search="lateSearch"
-              :items-per-page="lateItemsPerPage"
-              class="elevation-1"
-            >
-              <template v-slot:no-data>
-                <div class="text-center pa-4">No data available in table</div>
-              </template>
-            </v-data-table>
+        </v-col>
+        <v-col cols="12" md="1">
+          <v-card color="blue" dark class="text-center clickable-card" @click="handleStatusCardClick('5')">
+            <v-card-text>
+              <div class="text-h4">5</div>
+            </v-card-text>
           </v-card>
-
-          <!-- Clinic Entry Patients Table -->
-          <v-card>
-            <v-card-title class="d-flex justify-space-between align-center">
-              <span>Info Pasien Masuk Klinik</span>
-              <div class="d-flex align-center">
-                <span class="mr-2">Show</span>
-                <v-select
-                  v-model="clinicItemsPerPage"
-                  :items="[10, 25, 50, 100]"
-                  density="compact"
-                  variant="outlined"
-                  style="max-width: 80px"
-                  class="mr-4"
-                ></v-select>
-                <span class="mr-2">entries</span>
-                <span class="mr-4">Search:</span>
-                <v-text-field
-                  v-model="clinicSearch"
-                  density="compact"
-                  variant="outlined"
-                  style="max-width: 200px"
-                  hide-details
-                ></v-text-field>
-              </div>
-            </v-card-title>
-            <v-data-table
-              :headers="clinicHeaders"
-              :items="clinicPatients"
-              :search="clinicSearch"
-              :items-per-page="clinicItemsPerPage"
-              class="elevation-1"
-            >
-              <template v-slot:no-data>
-                <div class="text-center pa-4">No data available in table</div>
-              </template>
-            </v-data-table>
+        </v-col>
+        <v-col cols="12" md="1">
+          <v-card color="orange" dark class="text-center clickable-card" @click="handleStatusCardClick('10')">
+            <v-card-text>
+              <div class="text-h4">10</div>
+            </v-card-text>
           </v-card>
-        </v-container>
-      </v-main>
-    </v-layout>
-  </v-app>
+        </v-col>
+        <v-col cols="12" md="1">
+          <v-card color="red" dark class="text-center clickable-card" @click="handleStatusCardClick('20')">
+            <v-card-text>
+              <div class="text-h4">20</div>
+            </v-card-text>
+          </v-card>
+        </v-col>
+      </v-row>
+    
+
+      <!-- Next Patient Card -->
+      <v-col cols="12" md="4">
+        <v-card color="green" dark class="mb-4 clickable-card" @click="handleNextPatientClick">
+          <v-card-text class="text-center">
+            <div class="text-h4 mb-2">NEXT</div>
+            <div class="text-h6 mb-1">Pasien : UM1001</div>
+            <div class="text-body-2">
+              Klik untuk memanggil pasien selanjutnya
+            </div>
+          </v-card-text>
+        </v-card>
+      </v-col>
+
+      <!-- Main Data Table -->
+      <v-card class="mb-4">
+        <v-card-title class="d-flex justify-space-between align-center">
+          <span>Data Pasien</span>
+          <div class="d-flex align-center">
+            <span class="mr-2">Show</span>
+            <v-select
+              v-model="itemsPerPage"
+              :items="[10, 25, 50, 100]"
+              density="compact"
+              variant="outlined"
+              style="max-width: 80px"
+              class="mr-4"
+            ></v-select>
+            <span class="mr-2">entries</span>
+            <span class="mr-4">Search:</span>
+            <v-text-field
+              v-model="search"
+              density="compact"
+              variant="outlined"
+              style="max-width: 200px"
+              hide-details
+            ></v-text-field>
+          </div>
+        </v-card-title>
+        <v-data-table
+          :headers="mainHeaders"
+          :items="mainPatients"
+          :search="search"
+          :items-per-page="itemsPerPage"
+          class="elevation-1"
+        >
+          <template v-slot:item.aksi="{ item }">
+            <div class="d-flex ga-1">
+              <v-btn size="small" color="success" variant="flat"
+                >Panggil</v-btn
+              >
+              <v-btn size="small" color="info" variant="flat">Cancel</v-btn>
+              <v-btn size="small" color="primary" variant="flat"
+                >Selesai</v-btn
+              >
+            </div>
+          </template>
+          <template v-slot:item.jamPanggil="{ item }">
+            <span :class="getRowClass(item)">{{ item.jamPanggil }}</span>
+          </template>
+        </v-data-table>
+      </v-card>
+
+      <!-- Total Quota Used -->
+      <v-card color="cyan" dark class="mb-4">
+        <v-card-text class="text-center">
+          <div class="text-h6">Total Quota Terpakai 5</div>
+        </v-card-text>
+      </v-card>
+
+      <!-- Late Patients Table -->
+      <v-card class="mb-4">
+        <v-card-title class="d-flex justify-space-between align-center">
+          <span>Info Pasien Lapor Terlambat</span>
+          <div class="d-flex align-center">
+            <span class="mr-2 text-caption text-orange"
+              >KETERANGAN: PASIEN MASUK PADA TANGGAL</span
+            >
+            <span class="mr-2">Show</span>
+            <v-select
+              v-model="lateItemsPerPage"
+              :items="[10, 25, 50, 100]"
+              density="compact"
+              variant="outlined"
+              style="max-width: 80px"
+              class="mr-4"
+            ></v-select>
+            <span class="mr-2">entries</span>
+            <span class="mr-4">Search:</span>
+            <v-text-field
+              v-model="lateSearch"
+              density="compact"
+              variant="outlined"
+              style="max-width: 200px"
+              hide-details
+            ></v-text-field>
+          </div>
+        </v-card-title>
+        <v-data-table
+          :headers="lateHeaders"
+          :items="latePatients"
+          :search="lateSearch"
+          :items-per-page="lateItemsPerPage"
+          class="elevation-1"
+        >
+          <template v-slot:no-data>
+            <div class="text-center pa-4">No data available in table</div>
+          </template>
+        </v-data-table>
+      </v-card>
+
+      <!-- Clinic Entry Patients Table -->
+      <v-card>
+        <v-card-title class="d-flex justify-space-between align-center">
+          <span>Info Pasien Masuk Klinik</span>
+          <div class="d-flex align-center">
+            <span class="mr-2">Show</span>
+            <v-select
+              v-model="clinicItemsPerPage"
+              :items="[10, 25, 50, 100]"
+              density="compact"
+              variant="outlined"
+              style="max-width: 80px"
+              class="mr-4"
+            ></v-select>
+            <span class="mr-2">entries</span>
+            <span class="mr-4">Search:</span>
+            <v-text-field
+              v-model="clinicSearch"
+              density="compact"
+              variant="outlined"
+              style="max-width: 200px"
+              hide-details
+            ></v-text-field>
+          </div>
+        </v-card-title>
+        <v-data-table
+          :headers="clinicHeaders"
+          :items="clinicPatients"
+          :search="clinicSearch"
+          :items-per-page="clinicItemsPerPage"
+          class="elevation-1"
+        >
+          <template v-slot:no-data>
+            <div class="text-center pa-4">No data available in table</div>
+          </template>
+        </v-data-table>
+      </v-card>
+    </v-container>
+  </v-main>
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
+import { ref } from "vue";
 
 // Reactive data
-const drawer = ref(true); // Nilai awal true agar sidebar terlihat
-const rail = ref(true); // Nilai awal true agar sidebar dimulai dalam mode rail
 const search = ref("");
 const lateSearch = ref("");
 const clinicSearch = ref("");
 const itemsPerPage = ref(10);
 const lateItemsPerPage = ref(10);
 const clinicItemsPerPage = ref(10);
-const currentPage = ref("Loket Admin");
-
-// Navigation items
-const items = ref([
-  { title: "Dashboard", icon: "mdi-view-dashboard", to: "/dashboard" },
-
-  {
-    title: "Setting",
-    icon: "mdi-cog",
-    children: [
-      { title: "Hak Akses", to: "/setting/hak-akses" },
-      { title: "User Login", to: "/setting/user-login" },
-      { title: "Master Loket", to: "/setting/master-loket" },
-      { title: "Master Klinik", to: "/setting/master-klinik" },
-      { title: "Master Klinik Ruang", to: "/setting/master-klinik-ruang" },
-      { title: "Screen", to: "/setting/screen" },
-    ],
-  },
-  { title: "Loket Admin", icon: "mdi-account-supervisor", to : "/LoketAdmin" },
-  { title: "Ranap Admin", icon: "mdi-bed" },
-  { title: "Klinik Admin", icon: "mdi-hospital-box", to : "/KlinikAdmin" },
-  { title: "Klinik Ruang Admin", icon: "mdi-hospital-marker", to: "/KlinikRuangAdmin" },
-
-  { 
-    title: "Anjungan", 
-    icon: "mdi-account-box-multiple", 
-    children: [
-      {title: "Anjungan", to: "/Anjungan/Anjungan"},
-      {title: "Admin Anjungan", to: "/Anjungan/AdminAnjungan"}
-    ],
-  },
-  { title: "Fast Track", icon: "mdi-clock-fast" },
-  { title: "Data Pasien", icon: "mdi-account-multiple" },
-  { title: "Screen", icon: "mdi-monitor" },
-  { title: "List Pasien", icon: "mdi-format-list-bulleted" },
-]);
 
 // Table headers
 const mainHeaders = ref([
@@ -427,6 +321,16 @@ const getRowClass = (item) => {
   }
   return "";
 };
+
+const handleStatusCardClick = (value) => {
+  console.log(`Status card with value ${value} was clicked!`);
+  // Tambahkan logika Anda di sini
+};
+
+const handleNextPatientClick = () => {
+  console.log("Next Patient card was clicked!");
+  // Tambahkan logika untuk memanggil pasien selanjutnya di sini
+};
 </script>
 
 <style scoped>
@@ -452,5 +356,18 @@ const getRowClass = (item) => {
 /* Row highlighting */
 :deep(.v-data-table tbody tr:nth-child(1)) {
   background-color: #fff3cd !important;
+}
+
+.main-content-padding {
+  padding-left: 64px !important;
+}
+
+.clickable-card {
+  cursor: pointer;
+  transition: transform 0.2s ease-in-out;
+}
+
+.clickable-card:hover {
+  transform: translateY(-4px);
 }
 </style>

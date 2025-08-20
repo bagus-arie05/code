@@ -1,238 +1,192 @@
 <template>
-  <v-app id="inspire">
-<!-- App Bar Header -->
-      <v-app-bar app color="green darken-1" dark>
-        <v-app-bar-nav-icon @click="rail = !rail"></v-app-bar-nav-icon>
-        <v-toolbar-title class="ml-2">Antrian RSSA</v-toolbar-title>
-        <v-spacer></v-spacer>
-        <v-btn icon>
-          <v-icon>mdi-account-circle</v-icon>
-        </v-btn>
-        <span class="mr-2">Rajal Bayu Nogroho</span>
-      </v-app-bar>
-
-      <!-- Navigation Drawer -->
-      <v-navigation-drawer v-model="drawer" :rail="rail" permanent app>
-        <v-list density="compact" nav>
-          <template v-for="item in items" :key="item.title">
-            <v-menu
-              v-if="item.children"
-              open-on-hover
-              location="end"
-              :nudge-right="3"
-              
+  <v-divider class="my-8"></v-divider>
+  <v-main class="bg-grey-lighten-3">
+    <v-container>
+      <div class="d-flex align-center justify-space-between mb-4 mt-10">
+        <h1 class="text-h4">Klinik Admin</h1>
+        <v-tooltip text="Jumlah Maksimal Bangku Tersedia">
+          <template v-slot:activator="{ props }">
+            <v-chip
+              v-bind="props"
+              class="text-white"
+              color="green-darken-1"
             >
-              <template v-slot:activator="{ props }">
-                <v-list-item
-                  v-bind="props"
-                  :prepend-icon="item.icon"
-                  :title="item.title"
-                  :value="item.title"
-                  :class="{ 'v-list-item--active': item.title === currentPage }"
-                >
-                </v-list-item>
-              </template>
-
-              <v-list>
-                <v-list-item>
-                  <v-list-item-title class="font-weight-bold">{{
-                    item.title
-                  }}</v-list-item-title>
-                </v-list-item>
-                <v-divider></v-divider>
-                <v-list-item
-                  v-for="child in item.children"
-                  :key="child.title"
-                  :to="child.to"
-                  link
-                >
-                  <v-list-item-title>{{ child.title }}</v-list-item-title>
-                </v-list-item>
-              </v-list>
-            </v-menu>
-
-         <v-tooltip
-            v-else
-            :disabled="!rail"
-            open-on-hover
-            location="end"
-            :text="item.title"
-            color="blue"
-          >
-            <template v-slot:activator="{ props }">
-              <v-list-item
-                v-bind="props"
-                :prepend-icon="item.icon"
-                :title="item.title"
-                :to="item.to"
-                :value="item.title"
-                :class="{ 'v-list-item--active': item.title === currentPage }"
-                link
-              ></v-list-item>
-            </template>
-          </v-tooltip>
+              <v-icon left>mdi-circle-small</v-icon>
+              Max Quota Bangku 0
+            </v-chip>
           </template>
-        </v-list>
-      </v-navigation-drawer>    
+        </v-tooltip>
+      </div>
 
-    <!-- Main Content -->
-    <v-main class="bg-grey-lighten-3">
-      <v-container>
-        <div class="d-flex align-center justify-space-between mb-4">
-          <h1 class="text-h4">Klinik Admin</h1>
-          <v-tooltip text="Jumlah Maksimal Bangku Tersedia">
-            <template v-slot:activator="{ props }">
-          <v-chip v-bind="props" color="green" variant="elevated">
-            <v-icon left>mdi-circle-small</v-icon>
-            Max Quota Bangku 0
-          </v-chip>
-            </template>
-          </v-tooltip>
+      <!-- Loket Admin Table -->
+      <v-card class="mb-5 pa-4">
+        <v-card-title class="d-flex justify-space-between align-center">
+          Loket Admin
+          <div>
+            <v-tooltip text="Panggil 1 Antrian">
+              <template v-slot:activator="{ props }">
+                <v-btn
+                  v-bind="props"
+                  color="green"
+                  class="mr-2 clickable-btn"
+                  @click="handleCallClick(1)"
+                  >1</v-btn
+                >
+              </template>
+            </v-tooltip>
+            <v-tooltip text="Panggil 5 Antrian">
+              <template v-slot:activator="{ props }">
+                <v-btn
+                  v-bind="props"
+                  color="blue"
+                  class="mr-2 clickable-btn"
+                  @click="handleCallClick(5)"
+                  >5</v-btn
+                >
+              </template>
+            </v-tooltip>
+            <v-tooltip text="Panggil 10 Antrian">
+              <template v-slot:activator="{ props }">
+                <v-btn
+                  v-bind="props"
+                  color="orange"
+                  class="mr-2 clickable-btn"
+                  @click="handleCallClick(10)"
+                  >10</v-btn
+                >
+              </template>
+            </v-tooltip>
+            <v-tooltip text="Panggil 20 Antrian">
+              <template v-slot:activator="{ props }">
+                <v-btn
+                  v-bind="props"
+                  color="red"
+                  class="clickable-btn"
+                  @click="handleCallClick(20)"
+                  >20</v-btn
+                >
+              </template>
+            </v-tooltip>
+          </div>
+        </v-card-title>
+        <v-table class="mt-3">
+          <thead>
+            <tr>
+              <th v-for="header in loketHeaders" :key="header.text">
+                {{ header.text }}
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(item, index) in loketData" :key="index">
+              <td>{{ item.no }}</td>
+              <td>{{ item.barcode }}</td>
+              <td>{{ item.noRekamedik }}</td>
+              <td>{{ item.noAntrian }}</td>
+              <td>{{ item.shift }}</td>
+              <td>{{ item.ket }}</td>
+              <td>{{ item.fastTrack }}</td>
+              <td>{{ item.pembayaran }}</td>
+              <td><v-btn size="x-small" color="primary">Panggil</v-btn></td>
+              <td>
+                <v-btn size="x-small" color="red">Batalkan</v-btn>
+              </td>
+            </tr>
+          </tbody>
+        </v-table>
+        <div class="d-flex justify-space-between align-center mt-3">
+          <span>Showing {{ loketData.length > 0 ? 1 : 0 }} to {{ loketData.length }} of {{ loketData.length }} entries</span>
+          <div>
+            <v-btn size="small" variant="text" disabled>Previous</v-btn>
+            <v-btn size="small" variant="text" disabled>Next</v-btn>
+          </div>
         </div>
+      </v-card>
 
-        <!-- Loket Admin Table -->
-        <v-card class="mb-5 pa-4">
-          <v-card-title class="d-flex justify-space-between align-center">
-            Loket Admin
-             <!-- <div class="d-flex align-center">
-              <span text-h1>Show</span>
-              <v-select
-                density="compact"
-                variant="outlined"
-                :items="[10, 25, 50, 100]"
-                class="mx-1"
-                style="width: 90px"
-              ></v-select>
-              <span>entries</span>
-            </div>   --> 
-            <!-- not aligned with the class div "need seperated div class" -->
-            <div>
-                <v-tooltip text="Panggil 1 Antrian">
-                  <template v-slot:activator="{ props }">
-                    <v-btn v-bind="props" color="green" class="mr-2">1</v-btn>
-                  </template>
-                </v-tooltip>
-                <v-tooltip text="Panggil 5 Antrian">
-                  <template v-slot:activator="{ props }">
-                    <v-btn v-bind="props" color="blue" class="mr-2">5</v-btn>
-                  </template>
-                </v-tooltip>
-                <v-tooltip text="Panggil 10 Antrian">
-                  <template v-slot:activator="{ props }">
-                    <v-btn v-bind="props" color="orange" class="mr-2">10</v-btn>
-                  </template>
-                </v-tooltip>
-                <v-tooltip text="Panggil 20 Antrian">
-                  <template v-slot:activator="{ props }">
-                    <v-btn v-bind="props" color="red">20</v-btn>
-                  </template>
-                </v-tooltip>
-            </div>  
-          </v-card-title>
-          <v-table class="mt-3">
-            <thead>
-              <tr>
-                <th v-for="header in loketHeaders" :key="header.text">
-                  {{ header.text }}
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td :colspan="loketHeaders.length" class="text-center">
-                  No data available in table
-                </td>
-              </tr>
-            </tbody>
-          </v-table>
-          <div class="d-flex justify-space-between align-center mt-3">
-            <span>Showing 0 to 0 of 0 entries</span>
-            <div>
-              <v-btn size="small" variant="text" disabled>Previous</v-btn>
-              <v-btn size="small" variant="text" disabled>Next</v-btn>
-            </div>
+      <!-- Data Pengunjung Table -->
+      <v-card class="pa-4">
+        <v-card-title>Data Pengunjung: Loket</v-card-title>
+        <v-table class="mt-3">
+          <thead>
+            <tr>
+              <th v-for="header in pengunjungHeaders" :key="header.text">
+                {{ header.text }}
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(item, index) in pengunjungData" :key="index">
+              <td>{{ item.no }}</td>
+              <td>{{ item.barcode }}</td>
+              <td>{{ item.noRekamedik }}</td>
+              <td>{{ item.noAntrian }}</td>
+              <td>{{ item.noAntrianKlinik }}</td>
+              <td>{{ item.shift }}</td>
+              <td>{{ item.pembayaran }}</td>
+              <td>{{ item.status }}</td>
+            </tr>
+          </tbody>
+        </v-table>
+        <div class="d-flex justify-space-between align-center mt-3">
+          <span>Showing {{ pengunjungData.length > 0 ? 1 : 0 }} to {{ pengunjungData.length }} of {{ pengunjungData.length }} entries</span>
+          <div>
+            <v-btn size="small" variant="text" disabled>Previous</v-btn>
+            <v-btn size="small" variant="text" disabled>Next</v-btn>
           </div>
-        </v-card>
-
-        <!-- Data Pengunjung Table -->
-        <v-card class="pa-4">
-          <v-card-title>Data Pengunjung: Loket</v-card-title>
-          <v-table class="mt-3">
-            <thead>
-              <tr>
-                <th v-for="header in pengunjungHeaders" :key="header.text">
-                  {{ header.text }}
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td :colspan="pengunjungHeaders.length" class="text-center">
-                  No data available in table
-                </td>
-              </tr>
-            </tbody>
-          </v-table>
-          <div class="d-flex justify-space-between align-center mt-3">
-            <span>Showing 0 to 0 of 0 entries</span>
-            <div>
-              <v-btn size="small" variant="text" disabled>Previous</v-btn>
-              <v-btn size="small" variant="text" disabled>Next</v-btn>
-            </div>
-          </div>
-        </v-card>
-      </v-container>
-    </v-main>
-  </v-app>
+        </div>
+      </v-card>
+    </v-container>
+  </v-main>
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
+import { ref } from "vue";
 
-// Reactive data
-const drawer = ref(true); // Nilai awal true agar sidebar terlihat
-const rail = ref(true); // Nilai awal true agar sidebar dimulai dalam mode rail
-const search = ref("");
-const lateSearch = ref("");
-const clinicSearch = ref("");
-const itemsPerPage = ref(10);
-const lateItemsPerPage = ref(10);
-const clinicItemsPerPage = ref(10);
-const currentPage = ref("Klinik Admin");
-
-// Navigation items
-const items = ref([
-  { title: "Dashboard", icon: "mdi-view-dashboard", to: "/dashboard" },
-
+// Sample data for the tables
+const loketData = ref([
   {
-    title: "Setting",
-    icon: "mdi-cog",
-    children: [
-      { title: "Hak Akses", to: "/setting/hak-akses" },
-      { title: "User Login", to: "/setting/user-login" },
-      { title: "Master Loket", to: "/setting/master-loket" },
-      { title: "Master Klinik", to: "/setting/master-klinik" },
-      { title: "Master Klinik Ruang", to: "/setting/master-klinik-ruang" },
-      { title: "Screen", to: "/setting/screen" },
-    ],
+    no: 1,
+    barcode: "1234567890",
+    noRekamedik: "RM001",
+    noAntrian: "A001",
+    shift: "Pagi",
+    ket: "Normal",
+    fastTrack: "Tidak",
+    pembayaran: "BPJS"
   },
-  { title: "Loket Admin", icon: "mdi-account-supervisor", to : "/LoketAdmin" },
-  { title: "Ranap Admin", icon: "mdi-bed" },
-  { title: "Klinik Admin", icon: "mdi-hospital-box", to : "/KlinikAdmin" },
-  { title: "Klinik Ruang Admin", icon: "mdi-hospital-marker", to: "/KlinikRuangAdmin" },
+  {
+    no: 2,
+    barcode: "0987654321",
+    noRekamedik: "RM002",
+    noAntrian: "A002",
+    shift: "Pagi",
+    ket: "Normal",
+    fastTrack: "Ya",
+    pembayaran: "Umum"
+  }
+]);
 
-  { 
-    title: "Anjungan", 
-    icon: "mdi-account-box-multiple", 
-    children: [
-      {title: "Anjungan", to: "/Anjungan/Anjungan"},
-      {title: "Admin Anjungan", to: "/Anjungan/AdminAnjungan"}
-    ],
+const pengunjungData = ref([
+  {
+    no: 1,
+    barcode: "1234567890",
+    noRekamedik: "RM001",
+    noAntrian: "A001",
+    noAntrianKlinik: "K001",
+    shift: "Pagi",
+    pembayaran: "BPJS",
+    status: "Menunggu"
   },
-  { title: "Fast Track", icon: "mdi-clock-fast" },
-  { title: "Data Pasien", icon: "mdi-account-multiple" },
-  { title: "Screen", icon: "mdi-monitor" },
-  { title: "List Pasien", icon: "mdi-format-list-bulleted" },
+  {
+    no: 2,
+    barcode: "0987654321",
+    noRekamedik: "RM002",
+    noAntrian: "A002",
+    noAntrianKlinik: "K002",
+    shift: "Pagi",
+    pembayaran: "Umum",
+    status: "Selesai"
+  }
 ]);
 
 const loketHeaders = [
@@ -258,14 +212,21 @@ const pengunjungHeaders = [
   { text: 'Pembayaran' },
   { text: 'Status' },
 ]
+
+// Methods to handle clicks
+const handleCallClick = (value) => {
+  console.log(`Panggil ${value} antrian diklik!`);
+  // Tambahkan logika untuk memanggil antrian di sini
+};
 </script>
 
 <style scoped>
-#inspire .v-navigation-drawer__content {
-  background-color: #f5f5f5;
+.clickable-btn {
+  cursor: pointer;
+  transition: transform 0.2s ease-in-out;
 }
 
-#inspire .v-app-bar {
-  background-color: #fff;
+.clickable-btn:hover {
+  transform: translateY(-2px);
 }
 </style>
