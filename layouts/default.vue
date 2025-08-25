@@ -152,7 +152,7 @@ const currentActiveMenu = computed(() => {
 
 <style scoped>
 .v-list-item--active {
-  background-color: var(--v-theme-primary);
-  color: #fff !important;
+  background-color: #ffffff;
+  color: #000000 !important;
 }
 </style>
