@@ -1,35 +1,43 @@
 <template>
   <v-card-text>
-    <v-toolbar flat color="transparent" dense>
-      <v-toolbar-title class="text-subtitle-1 font-weight-bold" :class="{ 'red--text': title.includes('TERLAMBAT') }">
-        {{ title }}
-      </v-toolbar-title>
-      <v-spacer></v-spacer>
-      <div class="d-flex align-center">
-        <span>Show</span>
-        <v-select
-          :items="[10, 25, 50, 100]"
-          v-model="itemsPerPage"
-          label="entries"
-          dense
-          single-line
-          hide-details
-          class="shrink mx-2"
-          style="width: 80px"
-        ></v-select>
-        <span>entries</span>
-      </div>
-      <div v-if="showSearch" class="d-flex align-center ml-4">
-        <span class="mr-2">Search:</span>
-        <v-text-field
-          v-model="search"
-          label="Search"
-          hide-details
-          density="compact"
-          style="min-width: 200px"
-        ></v-text-field>
-      </div>
-    </v-toolbar>
+    <!-- Title Section -->
+    <v-row no-gutters class="mb-3">
+      <v-col cols="12">
+        <v-card-title class="text-subtitle-1 font-weight-bold pa-0" :class="{ 'red--text': title.includes('TERLAMBAT') }">
+          {{ title }}
+        </v-card-title>
+      </v-col>
+    </v-row>
+
+    <!-- Controls Section -->
+    <v-row no-gutters class="d-flex align-center mb-4">
+      <v-col cols="12" sm="6" class="d-flex align-center">
+        <div class="d-flex align-center">
+          <span>Show</span>
+          <v-select
+            v-model="itemsPerPage"
+            :items="[10, 25, 50, 100]"
+            density="default"
+            hide-details
+            class="shrink"
+          />
+          <span>entries</span>
+        </div>
+      </v-col>
+
+      <v-col cols="12" sm="6" class="d-flex justify-end align-center">
+        <div v-if="showSearch" class="d-flex align-center">
+          <span class="mr-2">Search:</span>
+          <v-text-field
+            v-model="search"
+            label="Search"
+            hide-details
+            density="compact"
+            style="min-width: 200px"
+          />
+        </div>
+      </v-col>
+    </v-row>
 
     <v-data-table
       :headers="headers"
@@ -40,12 +48,15 @@
       class="elevation-1"
     >
       <template v-slot:item.aksi="{ item }">
-        <slot name="actions" :item="item">
-          </slot>
+        <slot name="actions" :item="item" />
+      </template>
+
+      <template #no-data>
+        <div class="text-center pa-4">No data available in table</div>
       </template>
     </v-data-table>
 
-    <div class="d-flex justify-space-between align-center pt-4">
+    <div class="d-flex justify-space-between align-center pa-4">
       <div class="text-body-2 text-grey-darken-1">
         Showing {{ currentPageStart }} to {{ currentPageEnd }} of {{ totalEntries }} entries
       </div>
@@ -107,7 +118,7 @@ const props = defineProps({
   showSearch: {
     type: Boolean,
     default: true,
-  }
+  },
 });
 
 const search = ref("");
@@ -177,12 +188,10 @@ const goToPage = (page) => {
   currentPage.value = page;
 };
 
-// Reset halaman ke 1 saat jumlah itemsPerPage berubah
 watch(itemsPerPage, () => {
   currentPage.value = 1;
 });
 
-// Reset halaman ke 1 saat data items berubah (misalnya, setelah filter atau fetch data baru)
 watch(() => props.items, () => {
   currentPage.value = 1;
 });
