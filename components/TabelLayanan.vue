@@ -9,7 +9,12 @@
       <v-checkbox
         :model-value="isSelected(item.id)"
         @change="toggleService(item.id)"
+        color="primary"
       ></v-checkbox>
+    </template>
+    
+    <template v-slot:item.no="{ item }">
+      {{ item.no }}
     </template>
   </v-data-table>
 </template>
@@ -35,3 +40,13 @@ const toggleService = (id) => {
   emit('update:selectedItems', newSelection);
 };
 </script>
+
+<style scoped>
+.v-data-table {
+  border-radius: 8px;
+}
+
+.v-checkbox {
+  justify-content: center;
+}
+</style>
