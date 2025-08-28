@@ -50,6 +50,7 @@
   </div>
 </template>
 
+
 <script setup>
 import { ref, onMounted } from 'vue'
 import TabelListPasien from '~/components/TabelListPasien.vue'

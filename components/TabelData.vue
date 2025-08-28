@@ -1,7 +1,8 @@
+<!-- components/TabelData.vue -->
 <template>
   <v-card-text>
     <!-- Title Section -->
-    <v-row no-gutters class="mb-3">
+    <v-row no-gutters class="mb-3" v-if="title">
       <v-col cols="12">
         <v-card-title class="text-subtitle-1 font-weight-bold pa-0" :class="{ 'red--text': title.includes('TERLAMBAT') }">
           {{ title }}
@@ -17,9 +18,11 @@
           <v-select
             v-model="itemsPerPage"
             :items="[10, 25, 50, 100]"
-            density="default"
+            density="compact"
+            variant="outlined"
             hide-details
-            class="shrink"
+            class="mx-2"
+            style="width: 80px;"
           />
           <span>entries</span>
         </div>
@@ -30,10 +33,10 @@
           <span class="mr-2">Search:</span>
           <v-text-field
             v-model="search"
-            label="Search"
             hide-details
             density="compact"
-            style="min-width: 200px"
+            variant="outlined"
+            style="width: 200px;"
           />
         </div>
       </v-col>
@@ -41,12 +44,39 @@
 
     <v-data-table
       :headers="headers"
-      :items="paginatedItems"
+      :items="filteredItems"
+      :items-per-page="itemsPerPage"
       :search="search"
       no-data-text="No data available in table"
       hide-default-footer
       class="elevation-1"
+      item-value="id"
     >
+      <!-- Custom slot untuk nomor urut -->
+      <template v-slot:item.no="{ index }">
+        {{ (currentPage - 1) * itemsPerPage + index + 1 }}
+      </template>
+
+      <!-- Custom slot untuk status -->
+      <template v-slot:item.status="{ item }">
+        <v-chip
+          :color="getStatusColor(item.status)"
+          size="small"
+          text-color="white"
+        >
+          {{ item.status }}
+        </v-chip>
+      </template>
+
+      <!-- Custom slot untuk keterangan -->
+      <template v-slot:item.keterangan="{ item }">
+        <span v-if="item.keterangan" class="text-red font-weight-bold">
+          {{ item.keterangan }}
+        </span>
+        <span v-else>-</span>
+      </template>
+
+      <!-- Slot untuk aksi -->
       <template v-slot:item.aksi="{ item }">
         <slot name="actions" :item="item" />
       </template>
@@ -56,51 +86,23 @@
       </template>
     </v-data-table>
 
-    <div class="d-flex justify-space-between align-center pa-4">
+    <!-- Footer Pagination -->
+    <div class="d-flex justify-space-between align-center mt-4">
       <div class="text-body-2 text-grey-darken-1">
         Showing {{ currentPageStart }} to {{ currentPageEnd }} of {{ totalEntries }} entries
       </div>
-      <div class="d-flex align-center">
-        <v-btn
-          :disabled="currentPage === 1"
-          @click="previousPage"
-          variant="text"
-          size="small"
-          class="text-body-2"
-        >
-          Previous
-        </v-btn>
-        <template v-for="page in visiblePages" :key="page">
-          <v-btn
-            v-if="page !== '...'"
-            :color="page === currentPage ? 'primary' : ''"
-            :variant="page === currentPage ? 'flat' : 'text'"
-            @click="goToPage(page)"
-            size="small"
-            class="mx-1"
-            min-width="40"
-          >
-            {{ page }}
-          </v-btn>
-          <span v-else class="mx-1">...</span>
-        </template>
-        <v-btn
-          :disabled="currentPage === totalPages"
-          @click="nextPage"
-          variant="text"
-          size="small"
-          class="text-body-2"
-        >
-          Next
-        </v-btn>
-      </div>
+      
+      <v-pagination
+        v-model="currentPage"
+        :length="totalPages"
+        :total-visible="7"
+      />
     </div>
   </v-card-text>
 </template>
 
 <script setup>
 import { ref, computed, watch } from "vue";
-import { defineProps } from "vue";
 
 const props = defineProps({
   headers: {
@@ -128,71 +130,68 @@ const currentPage = ref(1);
 const totalEntries = computed(() => props.items.length);
 const totalPages = computed(() => Math.ceil(totalEntries.value / itemsPerPage.value));
 
-const paginatedItems = computed(() => {
+// Filter items based on search and pagination
+const filteredItems = computed(() => {
+  let filtered = props.items;
+  
+  if (search.value) {
+    const searchLower = search.value.toLowerCase();
+    filtered = props.items.filter(item => {
+      return Object.values(item).some(value => 
+        String(value).toLowerCase().includes(searchLower)
+      );
+    });
+  }
+  
   const start = (currentPage.value - 1) * itemsPerPage.value;
   const end = start + itemsPerPage.value;
-  return props.items.slice(start, end);
+  return filtered.slice(start, end);
 });
 
-const currentPageStart = computed(() => (currentPage.value - 1) * itemsPerPage.value + 1);
-const currentPageEnd = computed(() => Math.min(currentPage.value * itemsPerPage.value, totalEntries.value));
-
-const visiblePages = computed(() => {
-  const pages = [];
-  const total = totalPages.value;
-  const current = currentPage.value;
-
-  if (total <= 7) {
-    for (let i = 1; i <= total; i++) {
-      pages.push(i);
-    }
-  } else {
-    if (current <= 4) {
-      for (let i = 1; i <= 5; i++) {
-        pages.push(i);
-      }
-      pages.push("...");
-      pages.push(total);
-    } else if (current >= total - 3) {
-      pages.push(1);
-      pages.push("...");
-      for (let i = total - 4; i <= total; i++) {
-        pages.push(i);
-      }
-    } else {
-      pages.push(1);
-      pages.push("...");
-      for (let i = current - 1; i <= current + 1; i++) {
-        pages.push(i);
-      }
-      pages.push("...");
-      pages.push(total);
-    }
-  }
-  return pages;
+const currentPageStart = computed(() => {
+  if (totalEntries.value === 0) return 0;
+  return (currentPage.value - 1) * itemsPerPage.value + 1;
 });
 
-const previousPage = () => {
-  if (currentPage.value > 1) {
-    currentPage.value--;
+const currentPageEnd = computed(() => {
+  const end = currentPage.value * itemsPerPage.value;
+  return Math.min(end, totalEntries.value);
+});
+
+// Method untuk mendapatkan warna status
+const getStatusColor = (status) => {
+  switch (status) {
+    case 'Tunggu Daftar':
+      return 'orange';
+    case 'Barcode':
+      return 'blue';
+    case 'Selesai':
+      return 'green';
+    case 'Batal':
+      return 'red';
+    default:
+      return 'grey';
   }
 };
 
-const nextPage = () => {
-  if (currentPage.value < totalPages.value) {
-    currentPage.value++;
-  }
-};
-
-const goToPage = (page) => {
-  currentPage.value = page;
-};
-
+// Watch untuk reset halaman ketika items per page berubah
 watch(itemsPerPage, () => {
   currentPage.value = 1;
 });
 
+// Watch untuk reset halaman ketika items berubah
 watch(() => props.items, () => {
   currentPage.value = 1;
 });
+
+// Watch untuk reset halaman ketika search berubah
+watch(search, () => {
+  currentPage.value = 1;
+});
 </script>
+
+<style scoped>
+.text-red {
+  color: #d32f2f;
+}
+</style>

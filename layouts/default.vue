@@ -2,7 +2,7 @@
   <!-- Root component for the entire Vuetify application -->
   <v-app>
     <!-- App bar di bagian atas layout -->
-     <v-app-bar app color="green darken-1" dark>
+     <v-app-bar app color=#ff9248 dark>
         <v-app-bar-nav-icon @click="rail = !rail"></v-app-bar-nav-icon>
         <v-toolbar-title class="ml-2">Antrean RSSA</v-toolbar-title>
         <v-spacer></v-spacer>
