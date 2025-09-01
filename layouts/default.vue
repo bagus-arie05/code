@@ -5,7 +5,7 @@
      <v-app-bar app color=#ff9248 dark>
         <v-app-bar-nav-icon @click="rail = !rail"></v-app-bar-nav-icon>
         <v-toolbar-title class="ml-2">Antrean RSSA</v-toolbar-title>
-        <v-spacer></v-spacer>
+        <v-spacer></v-spacer>++++++++++++++
         <v-btn icon>
           <v-icon>mdi-account-circle</v-icon>
         </v-btn>
