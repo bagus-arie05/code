@@ -70,8 +70,9 @@
         <v-btn
           icon="mdi-pencil"
           size="small"
-          color="primary"
+          color=#ff9248
           @click="editScreen(item)"
+          style="color:white;"
         ></v-btn>
       </template>
     </v-data-table>

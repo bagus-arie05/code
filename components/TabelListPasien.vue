@@ -2,31 +2,31 @@
   <div>
     <!-- Filter Section -->
     <v-row class="mb-4">
-      <v-col cols="12" md="3">
-        <v-text-field
-          v-model="filterDate"
-          type="date"
-          label="Tanggal"
-          density="compact"
-          hide-details
-          variant="outlined"
-        />
-      </v-col>
-      <v-col cols="12" md="3">
-        <v-select
-          v-model="filterStatus"
-          :items="statusOptions"
-          label="Status"
-          density="compact"
-          hide-details
-          variant="outlined"
-        />
-      </v-col>
-      <v-col cols="12" md="6" class="d-flex align-center gap-2">
-        <v-btn color="primary" @click="searchData">
-          Search
+      <v-col cols="12" class="d-flex align-center flex-wrap">
+        <div style="width: 200px;" class="mr-4">
+          <v-text-field
+            v-model="filterDate"
+            type="date"
+            label="Tanggal"
+            density="compact"
+            hide-details
+            variant="outlined"
+          />
+        </div>
+        <div style="width: 150px;" class="mr-4">
+          <v-select
+            v-model="filterStatus"
+            :items="statusOptions"
+            label="Status"
+            density="compact"
+            hide-details
+            variant="outlined"
+          />
+        </div>
+        <v-btn color="primary" @click="searchData" class="mr-3">
+          SEARCH
         </v-btn>
-        <v-btn color="success" variant="outlined" @click="exportLaporan">
+        <v-btn color="success" variant="outlined" @click="exportLaporan" class="mr-3">
           Laporan Pasien
         </v-btn>
         <v-btn color="info" variant="outlined" @click="exportLaporanPerKlinik">
@@ -39,14 +39,15 @@
     <v-row class="mb-3">
       <v-col cols="12" md="6" class="d-flex align-center">
         <span class="mr-2">Show</span>
-        <v-select
-          v-model="itemsPerPage"
-          :items="[10, 25, 50, 100]"
-          density="compact"
-          hide-details
-          style="width: 80px"
-          variant="outlined"
-        />
+        <div style="width: 100px;">
+          <v-select
+            v-model="itemsPerPage"
+            :items="[10, 25, 50, 100]"
+            density="compact"
+            hide-details
+            variant="outlined"
+          />
+        </div>
         <span class="ml-2">entries</span>
       </v-col>
       <v-col cols="12" md="6" class="d-flex justify-end">
@@ -268,7 +269,8 @@ const exportLaporan = () => {
 }
 
 const exportLaporanPerKlinik = () => {
-  emit('export-laporan-per-klinik')
+  // Navigate to laporan pasien per klinik page
+  navigateTo('/laporan-pasien-per-klinik')
 }
 
 const getStatusColor = (status) => {

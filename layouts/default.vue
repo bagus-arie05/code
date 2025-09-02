@@ -4,12 +4,12 @@
     <!-- App bar di bagian atas layout -->
      <v-app-bar app color=#ff9248 dark>
         <v-app-bar-nav-icon @click="rail = !rail"></v-app-bar-nav-icon>
-        <v-toolbar-title class="ml-2">Antrean RSSA</v-toolbar-title>
-        <v-spacer></v-spacer>++++++++++++++
+        <v-toolbar-title class="ml-2" style="color: white;">Antrean RSSA</v-toolbar-title>
+        <v-spacer></v-spacer>
         <v-btn icon>
-          <v-icon>mdi-account-circle</v-icon>
+          <v-icon color="white">mdi-account-circle</v-icon>
         </v-btn>
-        <span class="mr-2">Ragil Bayu Nogroho</span>
+        <span class="mr-2" style="color:white">Adam Sulfat</span>
       </v-app-bar>
 
     <!-- Komponen sidebar (v-navigation-drawer) yang Anda berikan -->

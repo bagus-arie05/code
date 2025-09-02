@@ -70,7 +70,7 @@
 
       <!-- Custom slot untuk keterangan -->
       <template v-slot:item.keterangan="{ item }">
-        <span v-if="item.keterangan" class="text-red font-weight-bold">
+        <span v-if="item.keterangan" class="text-green font-weight-medium">
           {{ item.keterangan }}
         </span>
         <span v-else>-</span>
@@ -192,6 +192,6 @@ watch(search, () => {
 
 <style scoped>
 .text-red {
-  color: #d32f2f;
+  color: #383838;
 }
 </style>

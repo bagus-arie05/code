@@ -3,7 +3,7 @@
     <v-card>
       <v-card-title class="d-flex justify-space-between align-center">
         <span>Master Loket</span>
-        <v-btn color="primary" @click="tambahLoket">Tambah Baru</v-btn>
+        <v-btn color=#ff9248 @click="tambahLoket" style="color:white;">Tambah Baru</v-btn>
       </v-card-title>
       <TabelData
         :headers="loketHeaders"
@@ -11,8 +11,8 @@
         title="Master Loket"
       >
         <template #actions="{ item }">
-          <v-btn small color="info" @click="editLoket(item)" class="mr-2">Edit</v-btn>
-          <v-btn small color="error" @click="deleteLoket(item)">Delete</v-btn>
+          <v-btn small color=#ff9248 @click="editLoket(item)" class="mr-2" style="color:white;">Edit</v-btn>
+          <v-btn small color="grey-lighten-4" @click="deleteLoket(item)">Delete</v-btn>
         </template>
       </TabelData>
     </v-card>

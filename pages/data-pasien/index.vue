@@ -5,8 +5,8 @@
     <div class="d-flex justify-space-between align-center mb-4">
       <h2>Data Pasien</h2>
       <div class="d-flex gap-2">
-        <v-btn color="primary" prepend-icon="mdi-plus" @click="addPatient">
-          Add Patient
+        <v-btn color=#ff9248 prepend-icon="mdi-plus" @click="addPatient" style="color:white">
+         Tambah Pasien
         </v-btn>
       </div>
     </div>
@@ -23,14 +23,15 @@
           <v-btn
     
             size="small"
-            color="primary"
+            color=#ff9248
             variant="flat"
             @click="viewPasien(item)"
+            style="color:white;"
           >VIEW</v-btn>
           <v-btn
      
             size="small"
-            color="warning"
+            color="grey-lighten-4"
             variant="flat"
             @click="editPasien(item)"
           >EDIT</v-btn>
