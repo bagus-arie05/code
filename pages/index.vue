@@ -20,7 +20,7 @@
             </v-chip>
           </v-col>
           <v-col cols="12" md="2">
-            <v-btn block color="info">Pendaftaran Online</v-btn>
+            <v-btn block color=#ff9248 style="color:white;">Pendaftaran Online</v-btn>
           </v-col>
         </v-row>
       </v-card-text>
@@ -42,9 +42,9 @@
       >
         <template v-slot:actions="{ item }">
           <div class="d-flex ga-1">
-            <v-btn small color="success" class="d-flex flex-row" variant="flat">Tiket</v-btn>
-            <v-btn small color="success" class="d-flex flex-row" variant="flat"
-              >Tiket Pengantar</v-btn
+            <v-btn small color=#ff9248 class="d-flex flex-row" variant="flat" style="color:white;">PASIEN</v-btn>
+            <v-btn small color="grey-lighten-3" class="d-flex flex-row" variant="flat"
+              >PENGANTAR</v-btn
             >
             <v-btn small color="info" class="d-flex flex-row" variant="flat">ByPass</v-btn>
           </div>
