@@ -2,7 +2,7 @@
   <div>
     <!-- Filter Section -->
     <v-row class="mb-4">
-      <v-col cols="12" class="d-flex align-center flex-wrap">
+      <v-col cols="12" class="d-flex align-center flex-wrap ml-4">
         <div style="width: 200px;" class="mr-4">
           <v-text-field
             v-model="filterDate"
@@ -38,7 +38,7 @@
     <!-- Table Controls -->
     <v-row class="mb-3">
       <v-col cols="12" md="6" class="d-flex align-center">
-        <span class="mr-2">Show</span>
+        <span class="mr-2 pa-4">Show</span>
         <div style="width: 100px;">
           <v-select
             v-model="itemsPerPage"
@@ -51,7 +51,7 @@
         <span class="ml-2">entries</span>
       </v-col>
       <v-col cols="12" md="6" class="d-flex justify-end">
-        <div class="d-flex align-center">
+        <div class="d-flex align-center pa-4">
           <span class="mr-2">Search:</span>
           <v-text-field
             v-model="search"
