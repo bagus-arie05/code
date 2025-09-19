@@ -9,145 +9,208 @@
             <v-icon size="32" color="white">mdi-view-dashboard</v-icon>
           </div>
           <div class="header-text">
-            <h1 class="page-title">Loket 12</h1>
+            <h1 class="page-title">Loket Admin</h1>
             <p class="page-subtitle">Rabu, 13 Agustus 2025 - Pelayanan</p>
           </div>
         </div>
         <div class="header-right">
-          <v-chip
-            color="success"
-            variant="flat"
-            class="mr-2"
-          >
-            Total 2 Pasien
+          <v-chip color="success" variant="flat" class="mr-2">
+            Total {{ totalPasien }} Pasien
           </v-chip>
-          <v-chip
-            color="white"
-            variant="flat"
-            class="text-primary"
-          >
+          <v-chip color="white" variant="flat" class="text-primary">
             Max 150 Pasien
           </v-chip>
         </div>
       </div>
     </div>
-
-    <!-- Call Controls -->
-    <v-card class="call-controls-card mb-4" elevation="2">
-      <v-card-text class="py-4">
-        <v-row align="center">
-          <v-col cols="12" md="8">
-            <div class="d-flex align-center flex-wrap gap-3">
-              <span class="text-subtitle-1 font-weight-medium">Panggil Pasien:</span>
-              <v-btn
-                color="success"
-                variant="flat"
-                size="large"
-                class="px-6"
-                @click="callPatient(1)"
-              >
-                <span class="text-h6 font-weight-bold">1</span>
-              </v-btn>
-              <v-btn
-                color="info"
-                variant="flat"
-                size="large"
-                class="px-6"
-                @click="callPatient(5)"
-              >
-                <span class="text-h6 font-weight-bold">5</span>
-              </v-btn>
-              <v-btn
-                color="warning"
-                variant="flat"
-                size="large"
-                class="px-6"
-                @click="callPatient(10)"
-              >
-                <span class="text-h6 font-weight-bold">10</span>
-              </v-btn>
-              <v-btn
-                color="error"
-                variant="flat"
-                size="large"
-                class="px-6"
-                @click="callPatient(20)"
-              >
-                <span class="text-h6 font-weight-bold">20</span>
-              </v-btn>
-            </div>
-          </v-col>
-          <v-col cols="12" md="4">
-            <v-chip
-              color="info"
-              variant="flat"
-              class="float-right"
-            >
-              Total Quota Terpakai: 5
-            </v-chip>
-          </v-col>
-        </v-row>
-      </v-card-text>
-    </v-card>
-
-    <!-- Next Patient Card -->
-    <v-card class="next-patient-card mb-4" elevation="2">
-      <v-card-text class="text-center pa-8">
-        <v-chip color="success" variant="flat" class="mb-4" size="large">
-          <v-icon start>mdi-account-arrow-right</v-icon>
-          PASIEN SELANJUTNYA
-        </v-chip>
-        <div class="text-h3 font-weight-bold mb-2 text-success">
-          UM1004
-        </div>
-        <div class="text-h6 mb-4 text-grey-darken-1">
-          Klik tombol hijau untuk memanggil
-        </div>
-        <v-btn
-          color="success"
-          variant="flat"
-          size="x-large"
-          class="px-12"
-          @click="callNext"
+    <div>
+      <v-card class="next-patient-card mb-4" elevation="2">
+        <v-card-text class="text-center pa-6">
+          <v-chip color="success" variant="flat" class="mb-3" size="large">
+            <v-icon start>mdi-account-arrow-right</v-icon>
+            PASIEN SELANJUTNYA
+          </v-chip>
+          <div class="text-h4 font-weight-bold mb-2 text-success">
+            {{ nextPatient ? nextPatient.noAntrian.split(" |")[0] : "UM1004" }}
+          </div>
+          <div class="text-body-1 mb-4 text-grey-darken-1">
+            Klik tombol hijau untuk memanggil
+          </div>
+          <v-btn
+            color="success"
+            variant="flat"
+            size="large"
+            class="px-8"
+            @click="callNext"
+            :disabled="!nextPatient"
+          >
+            <v-icon start>mdi-microphone</v-icon>
+            PANGGIL NEXT
+          </v-btn>
+        </v-card-text>
+      </v-card>
+    </div>
+    <!-- Combined Control Section -->
+    <v-row class="mb-4">
+      <!-- Left Side: Call Controls and Current Processing -->
+      <v-col cols="12" lg="6">
+        <!-- Current Patient Processing Card -->
+        <v-card
+          v-if="currentProcessingPatient"
+          class="current-processing-card"
+          elevation="2"
         >
-          <v-icon start>mdi-microphone</v-icon>
-          PANGGIL NEXT
-        </v-btn>
-      </v-card-text>
-    </v-card>
+          <v-card-text class="pa-4">
+            <div class="d-flex align-center justify-space-between">
+              <div class="patient-info">
+                <v-chip color="primary" variant="flat" class="mb-2">
+                  <v-icon start>mdi-account-clock</v-icon>
+                  SEDANG DIPROSES
+                </v-chip>
+                <div class="text-h5 font-weight-bold mb-1">
+                  {{ currentProcessingPatient.noAntrian.split(" |")[0] }}
+                </div>
+                <div class="text-subtitle-1 text-grey-darken-1">
+                  {{ currentProcessingPatient.barcode }} |
+                  {{ currentProcessingPatient.klinik }}
+                </div>
+              </div>
+              <div class="action-buttons">
+                <v-btn
+                  color="success"
+                  variant="flat"
+                  class="mr-2"
+                  @click="processPatient(currentProcessingPatient, 'check-in')"
+                >
+                  <v-icon start>mdi-check-circle</v-icon>
+                  Check In
+                </v-btn>
+                <v-btn
+                  color="warning"
+                  variant="flat"
+                  class="mr-2"
+                  @click="processPatient(currentProcessingPatient, 'terlambat')"
+                >
+                  <v-icon start>mdi-clock-alert</v-icon>
+                  Terlambat
+                </v-btn>
+                <v-btn
+                  color="error"
+                  variant="flat"
+                  @click="processPatient(currentProcessingPatient, 'pending')"
+                >
+                  <v-icon start>mdi-pause-circle</v-icon>
+                  Pending
+                </v-btn>
+              </div>
+            </div>
+          </v-card-text>
+        </v-card>
+      </v-col>
 
-    <!-- Main Patients Table -->
+      <!-- Right Side: Patient Queue Info -->
+      <v-col cols="12" lg="6">
+        <!-- Next Patient Card -->
+        <!-- Quota Info Card -->
+        <v-card class="quota-info-card" elevation="2">
+          <v-card-text class="pa-4">
+            <div class="text-center">
+              <div class="text-h6 font-weight-medium mb-3">
+                Panggil Antrean Anjungan
+              </div>
+              <v-row class="mb-3">
+                <v-col cols="6" class="text-center">
+                  <div class="text-caption text-grey-darken-1">Kuota</div>
+                  <div class="text-h4 font-weight-bold">150</div>
+                </v-col>
+                <v-col cols="6" class="text-center">
+                  <div class="text-caption text-grey-darken-1">Tersedia</div>
+                  <div class="text-h4 font-weight-bold text-success">
+                    {{ 150 - quotaUsed }}
+                  </div>
+                </v-col>
+              </v-row>
+              <div class="text-body-2 text-grey-darken-1 mb-2">
+                Total Quota Terpakai: {{ quotaUsed }}
+              </div>
+              <v-progress-linear
+                :model-value="(quotaUsed / 150) * 100"
+                color="success"
+                height="8"
+                rounded
+              ></v-progress-linear>
+              <v-card-text class="call-controls-card align-center py-4">
+                <div> <span class="text-subtitle-1 font-weight-medium"
+                    >Panggil Pasien:</span> </div>
+                <div class="d-flex align-center flex-wrap mb-3">
+                  <v-btn
+                    color="success"
+                    variant="flat"
+                    size="large"
+                    class="px-6 ma-4"
+                    @click="callMultiplePatients(1)"
+                  >
+                    <span class="text-h6 font-weight-bold">1</span>
+                  </v-btn>
+                  <v-btn
+                    color="info"
+                    variant="flat"
+                    size="large"
+                    class="px-6 ma-4"
+                    @click="callMultiplePatients(5)"
+                  >
+                    <span class="text-h6 font-weight-bold">5</span>
+                  </v-btn>
+                  <v-btn
+                    color="warning"
+                    variant="flat"
+                    size="large"
+                    class="px-6 ma-4"
+                    @click="callMultiplePatients(10)"
+                  >
+                    <span class="text-h6 font-weight-bold">10</span>
+                  </v-btn>
+                  <v-btn
+                    color="error"
+                    variant="flat"
+                    size="large"
+                    class="px-6 ma-4"
+                    @click="callMultiplePatients(20)"
+                  >
+                    <span class="text-h6 font-weight-bold">20</span>
+                  </v-btn>
+                </div>
+              </v-card-text>
+            </div>
+          </v-card-text>
+        </v-card>
+      </v-col>
+    </v-row>
+
+    <!-- Di Loket Patients Table -->
     <v-card class="main-table-card mb-4" elevation="2">
       <TabelData
-        :headers="mainHeaders"
-        :items="mainPatients"
-        title="DATA PASIEN"
+        :headers="diLoketHeaders"
+        :items="diLoketPatients"
+        title="DATA PASIEN - DI LOKET"
       >
         <template #actions="{ item }">
           <div class="d-flex gap-1">
-            <v-btn 
-              size="small" 
-              color="success" 
+            <v-btn
+              size="small"
+              color="info"
               variant="flat"
-              @click="callPatient(item.no)"
+              @click="processPatient(item, 'aktifkan')"
             >
-              Panggil
+              Aktifkan
             </v-btn>
-            <v-btn 
-              size="small" 
-              color="warning" 
+            <v-btn
+              size="small"
+              color="success"
               variant="flat"
-              @click="cancelPatient(item)"
+              @click="processPatient(item, 'proses')"
             >
-              Cancel
-            </v-btn>
-            <v-btn 
-              size="small" 
-              color="primary" 
-              variant="flat"
-              @click="finishPatient(item)"
-            >
-              Selesai
+              Proses
             </v-btn>
           </div>
         </template>
@@ -157,23 +220,56 @@
       </TabelData>
     </v-card>
 
-    <!-- Late Patients Table -->
-    <v-card class="late-table-card mb-4" elevation="2" v-if="latePatients.length > 0">
+    <!-- Terlambat Patients Table -->
+    <v-card
+      class="late-table-card mb-4"
+      elevation="2"
+      v-if="terlambatPatients.length > 0"
+    >
       <TabelData
-        :headers="lateHeaders"
-        :items="latePatients"
+        :headers="terlambatHeaders"
+        :items="terlambatPatients"
         title="INFO PASIEN LAPOR TERLAMBAT"
-        :show-search="false"
-      />
+      >
+        <template #actions="{ item }">
+          <div class="d-flex gap-1">
+            <v-btn
+              size="small"
+              color="success"
+              variant="flat"
+              @click="processPatient(item, 'aktifkan')"
+            >
+              Aktifkan
+            </v-btn>
+          </div>
+        </template>
+      </TabelData>
     </v-card>
 
-    <!-- Clinic Patients Table -->
-    <v-card class="clinic-table-card mb-4" elevation="2" v-if="clinicPatients.length > 0">
+    <!-- Pending Patients Table -->
+    <v-card
+      class="pending-table-card mb-4"
+      elevation="2"
+      v-if="pendingPatients.length > 0"
+    >
       <TabelData
-        :headers="clinicHeaders"
-        :items="clinicPatients"
-        title="INFO PASIEN MASUK KLINIK"
-      />
+        :headers="pendingHeaders"
+        :items="pendingPatients"
+        title="INFO PASIEN PENDING"
+      >
+        <template #actions="{ item }">
+          <div class="d-flex gap-1">
+            <v-btn
+              size="small"
+              color="success"
+              variant="flat"
+              @click="processPatient(item, 'proses')"
+            >
+              Proses
+            </v-btn>
+          </div>
+        </template>
+      </TabelData>
     </v-card>
 
     <!-- Snackbar -->
@@ -184,7 +280,7 @@
       location="top right"
     >
       {{ snackbarText }}
-      
+
       <template v-slot:actions>
         <v-btn icon @click="snackbar = false">
           <v-icon>mdi-close</v-icon>
@@ -195,29 +291,18 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import TabelData from "../components/TabelData.vue";
 
 // Reactive data
-const snackbar = ref(false)
-const snackbarText = ref('')
-const snackbarColor = ref('success')
+const snackbar = ref(false);
+const snackbarText = ref("");
+const snackbarColor = ref("success");
+const quotaUsed = ref(5);
+const currentProcessingPatient = ref(null);
 
-// Data and Headers
-const mainHeaders = ref([
-  { title: "No", value: "no", sortable: false, width: "60px" },
-  { title: "Jam Panggil", value: "jamPanggil", sortable: true, width: "100px" },
-  { title: "Barcode", value: "barcode", sortable: true, width: "140px" },
-  { title: "No Antrian", value: "noAntrian", sortable: true, width: "200px" },
-  { title: "Shift", value: "shift", sortable: true, width: "80px" },
-  { title: "Klinik", value: "klinik", sortable: true, width: "120px" },
-  { title: "Fast Track", value: "fastTrack", sortable: true, width: "100px" },
-  { title: "Pembayaran", value: "pembayaran", sortable: true, width: "100px" },
-  { title: "Status", value: "panggil", sortable: true, width: "80px" },
-  { title: "Aksi", value: "aksi", sortable: false, width: "200px" },
-]);
-
-const mainPatients = ref([
+// Base patient data - semua pasien yang belum dipanggil
+const allPatients = ref([
   {
     no: 1,
     jamPanggil: "12:49",
@@ -227,8 +312,7 @@ const mainPatients = ref([
     klinik: "KANDUNGAN",
     fastTrack: "UMUM",
     pembayaran: "UMUM",
-    panggil: "Aktif",
-    status: "current",
+    status: "waiting", // waiting, di-loket, terlambat, pending, processed
   },
   {
     no: 2,
@@ -239,24 +323,76 @@ const mainPatients = ref([
     klinik: "IPD",
     fastTrack: "UMUM",
     pembayaran: "UMUM",
-    panggil: "Menunggu",
-    status: "normal",
+    status: "waiting",
   },
-  ...Array.from({ length: 20 }, (_, i) => ({
-    no: i + 3,
+  {
+    no: 3,
+    jamPanggil: "09:30",
+    barcode: "250811100200",
+    noAntrian: "UM1003 | Online - 250811100200",
+    shift: "Shift 1",
+    klinik: "SARAF",
+    fastTrack: "UMUM",
+    pembayaran: "UMUM",
+    status: "waiting",
+  },
+  {
+    no: 4,
+    jamPanggil: "14:15",
+    barcode: "250811100210",
+    noAntrian: "UM1004 | Online - 250811100210",
+    shift: "Shift 1",
+    klinik: "THT",
+    fastTrack: "UMUM",
+    pembayaran: "UMUM",
+    status: "waiting",
+  },
+  ...Array.from({ length: 16 }, (_, i) => ({
+    no: i + 5,
     jamPanggil: `${String(Math.floor(Math.random() * 12) + 1).padStart(2, "0")}:${String(Math.floor(Math.random() * 60)).padStart(2, "0")}`,
-    barcode: `25081110${String(i + 200).padStart(4, "0")}`,
-    noAntrian: `UM100${i + 3} | Online - 25081110${String(i + 200).padStart(4, "0")}`,
+    barcode: `25081110${String(i + 300).padStart(4, "0")}`,
+    noAntrian: `UM100${i + 5} | Online - 25081110${String(i + 300).padStart(4, "0")}`,
     shift: "Shift 1",
     klinik: ["KANDUNGAN", "IPD", "THT", "SARAF"][Math.floor(Math.random() * 4)],
     fastTrack: "UMUM",
     pembayaran: "UMUM",
-    panggil: "Menunggu",
-    status: "normal",
+    status: "waiting",
   })),
 ]);
 
-const lateHeaders = ref([
+// Computed properties for different status tables
+const diLoketPatients = computed(() =>
+  allPatients.value.filter((patient) => patient.status === "di-loket")
+);
+
+const terlambatPatients = computed(() =>
+  allPatients.value.filter((patient) => patient.status === "terlambat")
+);
+
+const pendingPatients = computed(() =>
+  allPatients.value.filter((patient) => patient.status === "pending")
+);
+
+const nextPatient = computed(() => {
+  return allPatients.value.find((patient) => patient.status === "waiting");
+});
+
+const totalPasien = computed(() => allPatients.value.length);
+
+// Headers for different tables
+const diLoketHeaders = ref([
+  { title: "No", value: "no", sortable: false, width: "60px" },
+  { title: "Jam Panggil", value: "jamPanggil", sortable: true, width: "100px" },
+  { title: "Barcode", value: "barcode", sortable: true, width: "140px" },
+  { title: "No Antrian", value: "noAntrian", sortable: true, width: "200px" },
+  { title: "Shift", value: "shift", sortable: true, width: "80px" },
+  { title: "Klinik", value: "klinik", sortable: true, width: "120px" },
+  { title: "Fast Track", value: "fastTrack", sortable: true, width: "100px" },
+  { title: "Pembayaran", value: "pembayaran", sortable: true, width: "100px" },
+  { title: "Aksi", value: "aksi", sortable: false, width: "200px" },
+]);
+
+const terlambatHeaders = ref([
   { title: "No", value: "no", sortable: false, width: "60px" },
   { title: "Barcode", value: "barcode", sortable: true, width: "140px" },
   { title: "No Antrian", value: "noAntrian", sortable: true, width: "200px" },
@@ -265,13 +401,10 @@ const lateHeaders = ref([
   { title: "Aksi", value: "aksi", sortable: false, width: "100px" },
 ]);
 
-const latePatients = ref([]);
-
-const clinicHeaders = ref([
+const pendingHeaders = ref([
   { title: "#", value: "no", sortable: false, width: "60px" },
   { title: "Barcode", value: "barcode", sortable: true, width: "140px" },
   { title: "No Antrian", value: "noAntrian", sortable: true, width: "200px" },
-  { title: "No RM", value: "noRM", sortable: true, width: "100px" },
   { title: "Shift", value: "shift", sortable: true, width: "80px" },
   { title: "Klinik", value: "klinik", sortable: true, width: "120px" },
   { title: "Fast Track", value: "fastTrack", sortable: true, width: "100px" },
@@ -279,30 +412,102 @@ const clinicHeaders = ref([
   { title: "Aksi", value: "aksi", sortable: false, width: "100px" },
 ]);
 
-const clinicPatients = ref([]);
-
 // Methods
-const showSnackbar = (text, color = 'success') => {
-  snackbarText.value = text
-  snackbarColor.value = color
-  snackbar.value = true
-}
+const showSnackbar = (text, color = "success") => {
+  snackbarText.value = text;
+  snackbarColor.value = color;
+  snackbar.value = true;
+};
 
-const callPatient = (number) => {
-  showSnackbar(`Memanggil pasien nomor ${number}`, 'success')
-}
+const callMultiplePatients = (count) => {
+  const waitingPatients = allPatients.value.filter(
+    (patient) => patient.status === "waiting"
+  );
+  const patientsToCall = waitingPatients.slice(0, count);
+
+  if (patientsToCall.length === 0) {
+    showSnackbar("Tidak ada pasien yang menunggu", "warning");
+    return;
+  }
+
+  // Check quota
+  if (quotaUsed.value + patientsToCall.length > 150) {
+    showSnackbar("Quota tidak mencukupi", "error");
+    return;
+  }
+
+  // Move patients to "di-loket" status
+  patientsToCall.forEach((patient) => {
+    patient.status = "di-loket";
+  });
+
+  quotaUsed.value += patientsToCall.length;
+  showSnackbar(`Memanggil ${patientsToCall.length} pasien ke loket`, "success");
+};
 
 const callNext = () => {
-  showSnackbar('Memanggil pasien selanjutnya: UM1004', 'success')
-}
+  if (!nextPatient.value) {
+    showSnackbar("Tidak ada pasien selanjutnya", "warning");
+    return;
+  }
 
-const cancelPatient = (patient) => {
-  showSnackbar(`Membatalkan pasien ${patient.noAntrian.split(' |')[0]}`, 'warning')
-}
+  if (quotaUsed.value >= 150) {
+    showSnackbar("Quota sudah penuh", "error");
+    return;
+  }
 
-const finishPatient = (patient) => {
-  showSnackbar(`Menyelesaikan pasien ${patient.noAntrian.split(' |')[0]}`, 'success')
-}
+  // Move next patient to processing
+  nextPatient.value.status = "di-loket";
+  currentProcessingPatient.value = nextPatient.value;
+  quotaUsed.value++;
+
+  showSnackbar(
+    `Memanggil pasien ${nextPatient.value.noAntrian.split(" |")[0]}`,
+    "success"
+  );
+};
+
+const processPatient = (patient, action) => {
+  const patientCode = patient.noAntrian.split(" |")[0];
+
+  switch (action) {
+    case "check-in":
+      patient.status = "processed";
+      if (currentProcessingPatient.value?.no === patient.no) {
+        currentProcessingPatient.value = null;
+      }
+      showSnackbar(`Pasien ${patientCode} berhasil check in`, "success");
+      break;
+
+    case "terlambat":
+      patient.status = "terlambat";
+      if (currentProcessingPatient.value?.no === patient.no) {
+        currentProcessingPatient.value = null;
+      }
+      showSnackbar(`Pasien ${patientCode} ditandai terlambat`, "warning");
+      break;
+
+    case "pending":
+      patient.status = "pending";
+      if (currentProcessingPatient.value?.no === patient.no) {
+        currentProcessingPatient.value = null;
+      }
+      showSnackbar(`Pasien ${patientCode} di-pending`, "info");
+      break;
+
+    case "aktifkan":
+      if (patient.status === "terlambat") {
+        patient.status = "di-loket";
+        showSnackbar(`Pasien ${patientCode} diaktifkan kembali`, "success");
+      }
+      break;
+
+    case "proses":
+      currentProcessingPatient.value = patient;
+      showSnackbar(`Memproses pasien ${patientCode}`, "info");
+      break;
+  }
+};
 
 const getRowClass = (item) => {
   if (item.status === "current") {
@@ -367,9 +572,11 @@ const getRowClass = (item) => {
 
 .call-controls-card,
 .next-patient-card,
+.current-processing-card,
+.quota-info-card,
 .main-table-card,
 .late-table-card,
-.clinic-table-card {
+.pending-table-card {
   border-radius: 16px;
   border: 1px solid rgba(0, 0, 0, 0.05);
 }
@@ -379,8 +586,29 @@ const getRowClass = (item) => {
   border: 2px solid rgba(76, 175, 80, 0.2);
 }
 
+.current-processing-card {
+  background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+  border: 2px solid rgba(255, 152, 0, 0.2);
+}
+
+.quota-info-card {
+  background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+  border: 2px solid rgba(33, 150, 243, 0.2);
+}
+
+.patient-info .text-h5 {
+  color: #1976d2;
+}
+
+.action-buttons {
+  display: flex;
+  align-items: center;
+}
+
 /* Enhanced table styling */
-.main-table-card :deep(.v-data-table th) {
+.main-table-card :deep(.v-data-table th),
+.late-table-card :deep(.v-data-table th),
+.pending-table-card :deep(.v-data-table th) {
   background: #fafbfc;
   font-weight: 600;
   font-size: 13px;
@@ -388,15 +616,15 @@ const getRowClass = (item) => {
   border-bottom: 1px solid #e5e7eb;
 }
 
-.main-table-card :deep(.v-data-table tbody tr:nth-child(1)) {
-  background-color: #fff3cd !important;
-}
-
-.main-table-card :deep(.v-data-table tbody tr:hover) {
+.main-table-card :deep(.v-data-table tbody tr:hover),
+.late-table-card :deep(.v-data-table tbody tr:hover),
+.pending-table-card :deep(.v-data-table tbody tr:hover) {
   background: #f8fafc !important;
 }
 
-.main-table-card :deep(.v-data-table tbody td) {
+.main-table-card :deep(.v-data-table tbody td),
+.late-table-card :deep(.v-data-table tbody td),
+.pending-table-card :deep(.v-data-table tbody td) {
   padding: 12px 16px;
   border-bottom: 1px solid #f1f5f9;
 }
@@ -423,14 +651,37 @@ const getRowClass = (item) => {
     gap: 20px;
     text-align: center;
   }
-  
+
   .header-left {
     flex-direction: column;
     gap: 12px;
   }
-  
+
   .page-title {
     font-size: 28px;
+  }
+
+  .current-processing-card .d-flex {
+    flex-direction: column;
+    gap: 20px;
+    align-items: flex-start;
+  }
+
+  .action-buttons {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 8px;
+    width: 100%;
+  }
+
+  .action-buttons .v-btn {
+    flex: 1;
+    min-width: 120px;
+  }
+
+  /* Stack layout vertically on medium screens */
+  .call-controls-card .d-flex {
+    justify-content: center;
   }
 }
 
@@ -438,27 +689,48 @@ const getRowClass = (item) => {
   .loket-container {
     padding: 16px;
   }
-  
+
   .header-content {
     padding: 24px 20px;
   }
-  
+
   .page-title {
     font-size: 24px;
   }
-  
+
   .header-icon {
     padding: 12px;
   }
 
   .call-controls-card .d-flex {
     flex-direction: column;
-    align-items: flex-start;
+    align-items: center;
     gap: 16px;
   }
 
   .call-controls-card .v-btn {
     min-width: 80px;
+  }
+
+  /* Stack all control buttons vertically on mobile */
+  .call-controls-card .d-flex.flex-wrap {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .call-controls-card .v-btn {
+    width: 100%;
+    margin: 4px 0;
+  }
+
+  .action-buttons {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .action-buttons .v-btn {
+    width: 100%;
+    margin: 4px 0;
   }
 }
 
@@ -467,12 +739,16 @@ const getRowClass = (item) => {
     font-size: 20px;
   }
 
-  .next-patient-card .text-h3 {
-    font-size: 2rem !important;
+  .next-patient-card .text-h4 {
+    font-size: 1.75rem !important;
   }
-  
-  .call-controls-card .d-flex.flex-wrap {
-    justify-content: center;
+
+  .current-processing-card .patient-info .text-h5 {
+    font-size: 1.25rem !important;
+  }
+
+  .quota-info-card .text-h4 {
+    font-size: 1.5rem !important;
   }
 }
 </style>
