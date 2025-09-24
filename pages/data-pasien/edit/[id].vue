@@ -230,7 +230,7 @@ const mockPasienData = {
     no_rekammedik: '11555500',
     klinik: 'IPD',
     shift: 'Shift 1 = Mulai Pukul 07:00',
-    keterangan: 'FINGATMANA ONLINE',
+    keterangan: 'PENDAFTARAN ONLINE',
     pembayaran: 'JKN'
   },
   2: {

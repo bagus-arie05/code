@@ -210,30 +210,30 @@
       
       <v-card-text class="pa-4">
         <v-row>
-          <v-col cols="6" md="3" class="text-center">
+          <v-col cols="8" md="4" class="text-center">
             <div class="stat-item">
               <div class="stat-number text-primary">{{ statistics.total }}</div>
               <div class="stat-label">Total Antrian</div>
             </div>
           </v-col>
-          <v-col cols="6" md="3" class="text-center">
+          <v-col cols="8" md="4" class="text-center">
             <div class="stat-item">
               <div class="stat-number text-success">{{ statistics.completed }}</div>
               <div class="stat-label">Selesai</div>
             </div>
           </v-col>
-          <v-col cols="6" md="3" class="text-center">
+          <v-col cols="8" md="4" class="text-center">
             <div class="stat-item">
               <div class="stat-number text-warning">{{ statistics.waiting }}</div>
               <div class="stat-label">Menunggu</div>
             </div>
           </v-col>
-          <v-col cols="6" md="3" class="text-center">
+          <!-- <v-col cols="6" md="3" class="text-center">
             <div class="stat-item">
               <div class="stat-number text-error">{{ statistics.avgWaitTime }}</div>
               <div class="stat-label">Rata-rata Tunggu (menit)</div>
             </div>
-          </v-col>
+          </v-col> -->
         </v-row>
       </v-card-text>
     </v-card>

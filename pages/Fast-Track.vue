@@ -22,7 +22,7 @@
             <v-icon start>{{ isLiveMode ? 'mdi-circle' : 'mdi-circle-outline' }}</v-icon>
             {{ isLiveMode ? 'Live Mode' : 'Offline Mode' }}
           </v-chip> -->
-          <v-btn
+          <!-- <v-btn
             color="white"
             variant="flat"
             prepend-icon="mdi-qrcode-scan"
@@ -30,7 +30,7 @@
             class="text-primary"
           >
             Scan Barcode
-          </v-btn>
+          </v-btn> -->
         </div>
       </div>
     </div>

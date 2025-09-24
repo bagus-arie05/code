@@ -1,31 +1,26 @@
 <template>
-  <!-- Root component for the entire Vuetify application -->
   <v-app>
-    <!-- App bar di bagian atas layout -->
-     <v-app-bar app color=#ff9248 dark>
-        <v-app-bar-nav-icon @click="rail = !rail"></v-app-bar-nav-icon>
-        <v-toolbar-title class="ml-2" style="color: white;">Antrean RSSA</v-toolbar-title>
-        <v-spacer></v-spacer>
-        <v-btn icon>
-          <v-icon color="white">mdi-account-circle</v-icon>
-        </v-btn>
-        <span class="mr-2" style="color:white">Adam Sulfat</span>
-      </v-app-bar>
+    <v-app-bar app color="#ff9248" dark>
+      <v-app-bar-nav-icon @click="rail = !rail"></v-app-bar-nav-icon>
+      <v-toolbar-title class="ml-2" style="color: white"
+        >Antrean RSSA</v-toolbar-title
+      >
+      <v-spacer></v-spacer>
+      <v-btn icon>
+        <v-icon color="white">mdi-account-circle</v-icon>
+      </v-btn>
+      <span class="mr-2" style="color: white">Adam Sulfat</span>
+    </v-app-bar>
 
-    <!-- Komponen sidebar (v-navigation-drawer) yang Anda berikan -->
     <v-navigation-drawer v-model="drawer" :rail="rail" permanent app>
-      <!-- Komponen untuk menampilkan item daftar menu -->
       <v-list density="compact" nav>
-        <!-- Loop melalui setiap item di array 'items' -->
         <template v-for="item in items" :key="item.title">
-          <!-- V-menu untuk item yang memiliki sub-menu (children) -->
           <v-menu
             v-if="item.children"
             open-on-hover
             location="end"
             :nudge-right="8"
           >
-            <!-- Slot untuk mengaktifkan menu saat diklik/hover -->
             <template v-slot:activator="{ props }">
               <v-list-item
                 v-bind="props"
@@ -71,10 +66,8 @@
       </v-list>
     </v-navigation-drawer>
 
-    <!-- Area konten utama aplikasi -->
     <v-main>
       <v-container fluid class="pa-0">
-        <!-- Di sini, konten halaman akan di-render oleh Nuxt -->
         <slot></slot>
       </v-container>
     </v-main>
@@ -83,7 +76,8 @@
         <v-row no-gutters align="center">
           <v-col cols="12" md="6">
             <span class="text-caption text-grey-darken-2">
-              RSUD Dr. Saiful Anwar Malang | Jl. Jaksa Agung Suprapto No. 2 Malang | Telp : 0341- 362101 | Fax : 0341-369384
+              RSUD Dr. Saiful Anwar Malang | Jl. Jaksa Agung Suprapto No. 2
+              Malang | Telp : 0341- 362101 | Fax : 0341-369384
             </span>
           </v-col>
           <v-col cols="12" md="6" class="text-right">
@@ -100,13 +94,12 @@
 <script setup>
 import { ref, computed } from "vue";
 import { useRoute } from 'vue-router';
+import AntrianKlinik from "~/pages/Anjungan/AntrianKlinik.vue";
 
 // Data untuk item-item sidebar
 const items = ref([
   { title: "Dashboard", icon: "mdi-view-dashboard", to: "/dashboard" },
-  {
-    title: "Setting",
-    icon: "mdi-cog",
+  { title: "Setting", icon: "mdi-cog",
     children: [
       { title: "Hak Akses", to: "/setting/hak-akses" },
       { title: "User Login", to: "/setting/user-login" },
@@ -120,10 +113,15 @@ const items = ref([
   { title: "Ranap Admin", icon: "mdi-bed", to: "/ranap-admin" },
   { title: "Klinik Admin", icon: "mdi-hospital-box", to: "/klinik-admin" },
   { title: "Klinik Ruang Admin", icon: "mdi-hospital-marker", to: "/klinik-ruang-admin" },
-  { title: "Anjungan", icon: "mdi-account-box-multiple", to: "/anjungan" },
+  { title: "Anjungan", icon: "mdi-account-box-multiple",
+      children: [
+        { title: "Anjungan", to: "/anjungan/anjungan" },
+        { title: "Klinik Ruang", to: "/anjungan/AntrianKlinik"},
+        ],
+  },
   { title: "Fast Track", icon: "mdi-clock-fast", to: "/fast-track" },
   { title: "Data Pasien", icon: "mdi-account-multiple", to: "/data-pasien" },
-  { title: "Screen", icon: "mdi-monitor", to: "/screen" },
+  { title: "Screen", icon: "mdi-monitor", to: "/setting/screen" },
   { title: "List Pasien", icon: "mdi-format-list-bulleted", to: "/list-pasien" },
 ]);
 

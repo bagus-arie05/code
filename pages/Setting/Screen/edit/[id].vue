@@ -190,7 +190,7 @@ onMounted(() => {
 
 .screen-card.active {
   border-color: #1976d2;
-  background-color: #f3f7ff;
+  background-color: #d4d4d4;
 }
 
 .screen-card .v-card-title {

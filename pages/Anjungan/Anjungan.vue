@@ -23,7 +23,7 @@
     </div>
 
     <!-- Controls Section -->
-    <v-card class="controls-card mb-4" elevation="2">
+    <!-- <v-card class="controls-card mb-4" elevation="2">
       <v-card-text class="py-3">
         <v-row align="center">
           <v-col cols="12" md="6">
@@ -67,14 +67,14 @@
           </v-col>
         </v-row>
       </v-card-text>
-    </v-card>
+    </v-card> -->
 
     <!-- Clinic Cards -->
     <v-card elevation="2" class="main-content-card">
-      <v-card-title class="d-flex align-center pa-4 bg-grey-lighten-4">
+      <!-- <v-card-title class="d-flex align-center pa-4 bg-grey-lighten-4">
         <v-icon class="mr-2">mdi-hospital-marker</v-icon>
         <span>Daftar Klinik - {{ filteredClinics.length }} dari {{ totalClinics }} klinik</span>
-      </v-card-title>
+      </v-card-title> -->
 
       <v-card-text class="pa-6">
         <v-row>

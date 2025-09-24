@@ -139,9 +139,12 @@
                 height="8"
                 rounded
               ></v-progress-linear>
-              <v-card-text class="call-controls-card align-center py-4">
-                <div> <span class="text-subtitle-1 font-weight-medium"
-                    >Panggil Pasien:</span> </div>
+            </div>
+          </v-card-text>
+        </v-card>
+                      <v-card-text class="call-controls-card align-center py-4">
+               <div class="text-subtitle-1 font-weight-medium"
+                    >Panggil Pasien:</div>
                 <div class="d-flex align-center flex-wrap mb-3">
                   <v-btn
                     color="success"
@@ -181,9 +184,6 @@
                   </v-btn>
                 </div>
               </v-card-text>
-            </div>
-          </v-card-text>
-        </v-card>
       </v-col>
     </v-row>
 
