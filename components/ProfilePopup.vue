@@ -2,43 +2,89 @@
   <v-menu
     v-model="menu"
     :close-on-content-click="false"
-    location="bottom"
+    location="bottom right"
     origin="top right"
-    transition="scale-transition"
+    transition="slide-y-transition"
   >
     <template v-slot:activator="{ props }">
-      <v-btn
-        icon
-        v-bind="props"
-        class="ml-auto"
-      >
-        <v-icon size="40" color="#000000">mdi-account</v-icon>
+      <v-btn icon v-bind="props">
+        <v-avatar size="40">
+          <v-img 
+            :src="user?.picture || 'https://i.pravatar.cc/300?img=68'" 
+            :alt="`${user?.name || 'User'} Profile`"
+          ></v-img>
+        </v-avatar>
       </v-btn>
     </template>
 
-    <v-card class="mx-auto" color="#FFA000" dark width="250">
-      <v-list-item three-line class="py-4">
-        <v-list-item-title class="text-h6 text-center font-weight-bold">
-          <v-avatar color="#fff" size="60">
-            <v-icon size="40" color="#4CAF50">mdi-account</v-icon>
-          </v-avatar>
-        </v-list-item-title>
-        <v-list-item-subtitle class="text-center mt-2 text-black">
-          <span class="d-block font-weight-bold">Rajal Bayu Nogroho</span>
-          <span class="d-block">Super Admin</span>
-        </v-list-item-subtitle>
-      </v-list-item>
+    <v-card class="rounded-lg elevation-4 pa-4" width="300">
+      <div class="d-flex align-center pb-2">
+        <v-avatar size="48">
+          <v-img 
+            :src="user?.picture || 'https://i.pravatar.cc/300?img=68'" 
+            :alt="`${user?.name || 'User'} Profile`"
+          ></v-img>
+        </v-avatar>
+        <div class="ml-4">
+          <div class="text-subtitle-1 font-weight-bold">
+            {{ user?.name || user?.preferred_username || 'User' }}
+          </div>
+          <div class="text-caption text-grey-darken-1">
+            {{ user?.email || 'No email' }}
+          </div>
+          <div class="text-caption text-grey-darken-2">
+            ID: {{ user?.id?.substring(0, 8) }}...
+          </div>
+        </div>
+      </div>
+      <v-divider class="my-2"></v-divider>
 
-      <v-card-actions class="d-flex justify-center pa-2">
-        <v-btn 
-          color="black" 
-          variant="text" 
-          class="font-weight-bold"
+      <v-list dense>
+        <v-list-item link class="rounded-lg" @click="handleAction('account')">
+          <template v-slot:prepend>
+            <v-icon>mdi-cog</v-icon>
+          </template>
+          <v-list-item-title>Pengaturan Akun</v-list-item-title>
+        </v-list-item>
+
+        <v-list-item link class="rounded-lg" @click="handleAction('darkMode')">
+          <template v-slot:prepend>
+            <v-icon>mdi-weather-night</v-icon>
+          </template>
+          <v-list-item-title>Mode Gelap</v-list-item-title>
+          <template v-slot:append>
+            <v-switch
+              v-model="darkMode"
+              hide-details
+              density="compact"
+              color="primary"
+            ></v-switch>
+          </template>
+        </v-list-item>
+
+        <v-list-item link class="rounded-lg" @click="handleAction('profile')">
+          <template v-slot:prepend>
+            <v-icon>mdi-account</v-icon>
+          </template>
+          <v-list-item-title>Profil Saya</v-list-item-title>
+        </v-list-item>
+
+        <v-divider class="my-2"></v-divider>
+
+        <v-list-item 
+          link 
+          class="rounded-lg text-red" 
           @click="signOut"
+          :disabled="isLoggingOut"
         >
-          Sign out
-        </v-btn>
-      </v-card-actions>
+          <template v-slot:prepend>
+            <v-icon color="red">mdi-logout</v-icon>
+          </template>
+          <v-list-item-title>
+            {{ isLoggingOut ? 'Logging out...' : 'Keluar' }}
+          </v-list-item-title>
+        </v-list-item>
+      </v-list>
     </v-card>
   </v-menu>
 </template>
@@ -46,15 +92,64 @@
 <script setup>
 import { ref } from 'vue';
 
-const menu = ref(false);
+// Props
+const props = defineProps({
+  user: {
+    type: Object,
+    required: true
+  }
+})
 
-const signOut = () => {
-  console.log("Sign out button clicked!");
+const menu = ref(false);
+const darkMode = ref(false);
+const isLoggingOut = ref(false);
+const emit = defineEmits(['logout']);
+
+/**
+ * Handles the logout action - delegates to parent
+ */
+const signOut = async () => {
+  if (isLoggingOut.value) return;
+  
+  isLoggingOut.value = true;
   menu.value = false;
-  // Implementasi logika logout di sini
+  
+  try {
+    console.log('🚪 ProfilePopup signOut called...')
+    emit('logout');
+  } finally {
+    isLoggingOut.value = false;
+  }
+};
+
+const handleAction = (action) => {
+  console.log('Action triggered:', action);
+  
+  switch(action) {
+    case 'account':
+      // Navigate to account settings
+      navigateTo('/settings/account')
+      break;
+    case 'profile':
+      // Navigate to profile page
+      navigateTo('/profile')
+      break;
+    case 'darkMode':
+      // Dark mode toggle is handled by v-model
+      break;
+    default:
+      console.log('Unknown action:', action);
+  }
+  
+  // Close menu for navigation actions
+  if (action !== 'darkMode') {
+    menu.value = false;
+  }
 };
 </script>
 
 <style scoped>
-/* No specific scoped styles needed for this component as Vuetify classes handle styling */
+.text-red {
+  color: rgb(244, 67, 54) !important;
+}
 </style>

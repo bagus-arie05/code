@@ -1,0 +1,25 @@
+// server/api/auth/[...].ts
+import { NuxtAuthHandler } from '#auth'
+
+export default NuxtAuthHandler({
+  secret: useRuntimeConfig().authSecret,
+  providers: [
+    {
+      id: 'keycloak',
+      name: 'Keycloak',
+      type: 'oidc',
+      issuer: useRuntimeConfig().keycloakIssuer,
+      clientId: useRuntimeConfig().keycloakClientId,
+      clientSecret: useRuntimeConfig().keycloakClientSecret,
+      checks: ['pkce', 'state'],
+      profile(profile) {
+        return {
+          id: profile.sub,
+          name: profile.name ?? profile.preferred_username,
+          email: profile.email,
+          image: profile.picture,
+        }
+      },
+    }
+  ]
+})
