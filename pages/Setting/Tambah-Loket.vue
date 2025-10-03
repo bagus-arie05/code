@@ -9,14 +9,14 @@
               icon
               variant="text"
               color="white"
-              @click="cancelEdit"
+              @click="cancelAdd"
               class="back-btn"
             >
               <v-icon>mdi-arrow-left</v-icon>
             </v-btn>
             <div class="header-text">
-              <h1 class="page-title">Edit Loket</h1>
-              <p class="page-subtitle">Perbarui informasi loket</p>
+              <h1 class="page-title">Tambah Loket Baru</h1>
+              <p class="page-subtitle">Isi form untuk menambahkan loket</p>
             </div>
           </div>
         </div>
@@ -124,11 +124,11 @@
               class="action-btn save-btn"
             >
               <v-icon left>mdi-content-save</v-icon>
-              Simpan Perubahan
+              Simpan Loket
             </v-btn>
             <v-btn
               color="grey-lighten-2"
-              @click="cancelEdit"
+              @click="cancelAdd"
               size="large"
               class="action-btn cancel-btn"
             >
@@ -143,26 +143,16 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
 import TabelLayanan from '../../components/TabelLayanan.vue';
 
-const route = useRoute();
 const router = useRouter();
 const formRef = ref(null);
 
-// Data dummy loket yang sama seperti di Master-Loket.vue
-const loketData = ref([
-  { id: 1, no: 1, namaLoket: 'Loket 1', kuota: 500, pelayanan: ['RADIOTERAPI', 'REHAB MEDIK', 'TINDAKAN'], pembayaran: 'JKN', keterangan: 'ONLINE', statusPelayanan: 'RAWAT JALAN' },
-  { id: 2, no: 2, namaLoket: 'Loket 2', kuota: 666, pelayanan: ['JIWA', 'SARAF'], pembayaran: 'JKN', keterangan: 'ONLINE', statusPelayanan: 'RAWAT JALAN' },
-  { id: 3, no: 3, namaLoket: 'Loket 3', kuota: 666, pelayanan: ['ANESTESI', 'JANTUNG'], pembayaran: 'JKN', keterangan: 'ONLINE', statusPelayanan: 'RAWAT JALAN' },
-  { id: 4, no: 4, namaLoket: 'Loket 4', kuota: 3676, pelayanan: ['KULIT KELAMIN', 'PARU'], pembayaran: 'JKN', keterangan: 'ONLINE', statusPelayanan: 'RAWAT JALAN' },
-]);
-
 const loket = ref({
-  id: null,
   namaLoket: '',
-  kuota: 0,
+  kuota: null,
   statusPelayanan: '',
   pembayaran: '',
   keterangan: '',
@@ -195,20 +185,6 @@ const availableServices = ref([
   { no: 16, id: 'TD', nama: 'TINDAKAN' },
 ]);
 
-onMounted(() => {
-  // Cari loket yang sesuai dengan ID di URL
-  const selectedLoket = loketData.value.find(loket => loket.id === parseInt(route.params.id));
-  
-  if (selectedLoket) {
-    // Jika data ditemukan, salin ke objek loket
-    loket.value = { ...selectedLoket };
-    // Konversi string pelayanan menjadi array untuk checkbox
-    if (typeof loket.value.pelayanan === 'string') {
-      loket.value.pelayanan = loket.value.pelayanan.split(', ').map(s => s.trim());
-    }
-  }
-});
-
 const simpanLoket = async () => {
   const { valid } = await formRef.value.validate();
   
@@ -222,14 +198,14 @@ const simpanLoket = async () => {
     return;
   }
 
-  // Dalam aplikasi nyata, ini adalah tempat untuk memanggil API update data
-  console.log('Data loket diperbarui:', loket.value);
+  // Dalam aplikasi nyata, ini adalah tempat untuk memanggil API create data
+  console.log('Data loket baru:', loket.value);
   
   // Kembali ke halaman master
   router.push('/Setting/Master-Loket');
 };
 
-const cancelEdit = () => {
+const cancelAdd = () => {
   router.back();
 };
 </script>

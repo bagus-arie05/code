@@ -1,10 +1,6 @@
 <template>
   <v-container>
     <v-card>
-      <!-- <v-card-title class="d-flex justify-space-between align-center">
-        <span>Master Loket</span>
-        <v-btn color=#ff9248 @click="tambahLoket" style="color:white;">Tambah Baru</v-btn>
-      </v-card-title> -->
       <div class="page-header">
         <div class="header-content">
           <div class="header-left">
@@ -16,6 +12,15 @@
               <p class="page-subtitle">Rabu, 13 Agustus 2025 - Pelayanan</p>
             </div>
           </div>
+          <v-btn 
+            color="white" 
+            @click="tambahLoket"
+            elevation="0"
+            class="add-btn"
+          >
+            <v-icon left size="20">mdi-plus-circle</v-icon>
+            Tambah Loket
+          </v-btn>
         </div>
       </div>
       <TabelData
@@ -30,11 +35,16 @@
             @click="editLoket(item)"
             class="mr-2"
             style="color: white"
-            >Edit</v-btn
           >
-          <v-btn small color="grey-lighten-4" @click="deleteLoket(item)"
-            >Delete</v-btn
+            Edit
+          </v-btn>
+          <v-btn 
+            small 
+            color="grey-lighten-4" 
+            @click="deleteLoket(item)"
           >
+            Delete
+          </v-btn>
         </template>
       </TabelData>
     </v-card>
@@ -55,10 +65,9 @@ const loketHeaders = ref([
   { title: "Pelayanan", value: "pelayanan" },
   { title: "Pembayaran", value: "pembayaran" },
   { title: "Keterangan", value: "keterangan" },
-  { title: "Aksi", value: "aksi", sortable: false }, // 'value' harus 'actions'
+  { title: "Aksi", value: "aksi", sortable: false },
 ]);
 
-// Master-Loket.vue
 const loketData = ref([
   {
     id: 1,
@@ -113,6 +122,7 @@ const tambahLoket = () => {
   router.push({ path: "/Setting/Tambah-Loket" });
 };
 </script>
+
 <style scoped>
 .page-header {
   background: linear-gradient(135deg, #1976d2 0%, #1565c0 100%);
@@ -120,6 +130,7 @@ const tambahLoket = () => {
   margin-bottom: 24px;
   box-shadow: 0 8px 32px rgba(25, 118, 210, 0.3);
 }
+
 .header-content {
   display: flex;
   align-items: center;
@@ -152,5 +163,14 @@ const tambahLoket = () => {
   margin: 4px 0 0 0;
   opacity: 0.9;
   font-size: 16px;
+}
+
+.add-btn {
+  font-weight: 600;
+  text-transform: none;
+  letter-spacing: 0.5px;
+  padding: 0 24px !important;
+  height: 44px !important;
+  color: #1976d2 !important;
 }
 </style>
